@@ -28,20 +28,18 @@ body {
   min-height: 100vh;
   position: sticky;
   top: 0;
-  height: 100vh;
   overflow: hidden;
 }
 
 .LogoTopo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 8px;
+  justify-content: center;
 }
 
 .ImagemLogo {
-  width: 32px;
-  height: 32px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
@@ -518,19 +516,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
 }
 
 .ImagemLogoModal {
-  width: 28px;
-  height: 28px;
+  width: 80%;
+  height: 80%;
   object-fit: contain;
-}
-
-.NomeLogoModal {
-  font-size: 20px;
-  font-weight: 700;
-  color: #2E3A52;
 }
 
 .TituloModal {
@@ -624,6 +615,8 @@ body {
   font-family: 'Sora', sans-serif;
   font-size: 14px;
   font-weight: 700;
+  text-decoration: none;
+  text-align: center;
   cursor: pointer;
   margin-top: 4px;
   transition: background-color 0.2s, color 0.2s;
