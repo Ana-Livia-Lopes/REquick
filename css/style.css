@@ -10,7 +10,7 @@ html, body {
 
 body {
   font-family: 'Sora', sans-serif;
-  background-color: #e7e9ed;
+  background-color: #F5F8F9;
   color: #1a1f2e;
   display: grid;
   grid-template-columns: 200px 1fr 350px;

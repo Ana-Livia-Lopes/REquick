@@ -1,0 +1,26 @@
+{
+  "name": "requick",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ana-Livia-Lopes/REquick.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Ana-Livia-Lopes/REquick/issues"
+  },
+  "homepage": "https://github.com/Ana-Livia-Lopes/REquick#readme",
+  "dependencies": {
+    "@hocuspocus/server": "^4.0.0",
+    "@tiptap/extension-collaboration": "^3.22.5",
+    "yjs": "^13.6.30"
+  }
+}

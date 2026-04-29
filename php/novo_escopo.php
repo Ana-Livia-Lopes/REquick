@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="BarraLateral">
@@ -47,6 +48,48 @@
                 <h1 class="titulo-escopo">Escopo Inicial</h1>
                 <h3 class="subtitulo-escopo">Centralize aqui as percepções e necessidades coletadas durante as entrevistas com o cliente. Este registro servirá como base estratégica para a estruturação de requisitos e consultas futuras durante todo o ciclo de vida do projeto</h3>
             </div>
+            <div id="container-texto">
+                <div id="toolbar">
+                    <div class="group">
+                        <button data-cmd="bold" title="Negrito">
+                            <i data-lucide="bold"></i>
+                        </button>
+
+                        <button data-cmd="italic" title="Itálico">
+                            <i data-lucide="italic"></i>
+                        </button>
+
+                        <button data-cmd="strike" title="Riscado">
+                            <i data-lucide="strikethrough"></i>
+                        </button>
+                    </div>
+
+                    <div class="group">
+                        <button data-cmd="paragraph" title="Parágrafo">
+                            <i data-lucide="pilcrow"></i>
+                        </button>
+
+                        <button data-cmd="h1" title="Título 1">
+                            H1
+                        </button>
+
+                        <button data-cmd="h2" title="Título 2">
+                            H2
+                        </button>
+                    </div>
+
+                    <div class="group">
+                        <button data-cmd="bulletList" title="Lista">
+                            <i data-lucide="list"></i>
+                        </button>
+
+                        <button data-cmd="orderedList" title="Lista numerada">
+                            <i data-lucide="list-ordered"></i>
+                        </button>
+                    </div>
+                </div>
+            <div id="editor"></div>
         </div>
+    <script type="module" src="../js/script.js"></script>
 </body>
 </html>
