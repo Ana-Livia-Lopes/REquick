@@ -2,14 +2,15 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Sora', sans-serif;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 body {
-  font-family: 'Sora', sans-serif;
   background-color: #F5F8F9;
   color: #1a1f2e;
   display: grid;
@@ -176,7 +177,6 @@ body {
   padding: 14px 16px 14px 46px;
   border: 1.5px solid #e2e6ed;
   border-radius: 12px;
-  font-family: 'Sora', sans-serif;
   font-size: 14px;
   color: #1a1f2e;
   background-color: #ffffff;
@@ -279,7 +279,6 @@ body {
   border: 1.5px solid #d1d8e6;
   border-radius: 10px;
   padding: 9px 18px;
-  font-family: 'Sora', sans-serif;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -322,7 +321,6 @@ body {
 }
 
 .DescricaoProjeto {
-  font-family: 'DM Sans', sans-serif;
   font-size: 12.5px;
   color: #6b7585;
   line-height: 1.55;
@@ -346,7 +344,6 @@ body {
   border-radius: 8px;
   padding: 9px 0;
   width: 100%;
-  font-family: 'Sora', sans-serif;
   font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
@@ -360,11 +357,12 @@ body {
 
 
 /* feed */
-.CentralizarDiv{
+.CentralizarDiv {
   height: 100vh;
   display: flex;
   align-items: center;
 }
+
 .FeedAtividades {
   background-color: #ffffff;
   padding: 28px 22px;
@@ -447,11 +445,9 @@ body {
 }
 
 .TextoAtividade {
-  font-family: 'DM Sans', sans-serif;
   font-size: 12.5px;
   color: #6b7585;
 }
-
 
 /* modal */
 .CheckboxModal {
@@ -467,7 +463,7 @@ body {
   justify-content: center;
 }
 
-.CheckboxModal:checked ~ .FundoModal {
+.CheckboxModal:checked~.FundoModal {
   display: flex;
 }
 
@@ -549,7 +545,6 @@ body {
   padding: 11px 14px;
   border: 1.5px solid #dde3ef;
   border-radius: 10px;
-  font-family: 'Sora', sans-serif;
   font-size: 13.5px;
   color: #1a1f2e;
   background-color: #ffffff;
@@ -580,7 +575,6 @@ body {
   padding: 11px 40px 11px 14px;
   border: 1.5px solid #dde3ef;
   border-radius: 10px;
-  font-family: 'Sora', sans-serif;
   font-size: 13.5px;
   color: #1a1f2e;
   background-color: #ffffff;
@@ -612,7 +606,6 @@ body {
   border-radius: 10px;
   padding: 13px;
   width: 60%;
-  font-family: 'Sora', sans-serif;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
@@ -621,11 +614,13 @@ body {
   margin-top: 4px;
   transition: background-color 0.2s, color 0.2s;
 }
-.CentralizarDiv2{
+
+.CentralizarDiv2 {
   width: 100%;
   display: flex;
   justify-content: center;
 }
+
 .BotaoCriarProjeto:hover {
   background-color: #bdc2cb;
 }
@@ -684,10 +679,11 @@ body {
     padding: 24px 20px;
     margin: 0 15px;
   }
-  .CentralizarDiv{
+
+  .CentralizarDiv {
     height: auto;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
   }
 
   .FeedAtividades {
@@ -733,4 +729,227 @@ body {
   .ContainerModal {
     padding: 24px 18px;
   }
+}
+
+/* Novo Escopo */
+/* Div Contâiner */
+.div-container-escopo {
+  width: 100%;
+  height: 100%;
+  margin-left: 50px;
+}
+
+/* Flecha Redirecionamento */
+.referencia-projeto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #2E3A52;
+  gap: 10px;
+}
+
+.div-flecha {
+  margin-top: 30px;
+  height: 50px;
+  width: 350px;
+  display: flex;
+}
+
+/* Título e subtítulo escopo */
+.div-titulo-subtitulo-escopo {
+  margin-top: 30px;
+  height: 50px;
+  display: block;
+  align-items: center;
+  justify-content: center;
+}
+
+.subtitulo-escopo {
+  width: 1570px;
+  font-size: 16px;
+  font-weight: medium;
+  margin-top: 10px;
+  color: #2E3A52;
+}
+
+/* Container Texto */
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  border-radius: 20px 20px 0 0;
+}
+
+.group {
+  display: flex;
+  gap: 4px;
+  padding-right: 8px;
+  border-right: 1px solid #e5e7eb;
+}
+
+.group:last-child {
+  border-right: none;
+}
+
+button {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+
+  transition: all 0.15s ease;
+}
+
+button:hover {
+  background: #f3f4f6;
+}
+
+button.active {
+  background: #e0ecff;
+  color: #2563eb;
+}
+
+/* Ícones */
+button i {
+  width: 18px;
+  height: 18px;
+}
+
+#container-texto {
+  margin: 100px auto;
+  background-color: #fff;
+  border-radius: 20px;
+  width: 1000px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.ProseMirror {
+  width: 794px;
+  min-height: 100%;
+  margin: auto;
+  background: white;
+  padding: 96px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  outline: none;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+#editor {
+  height: 500px;
+  overflow-y: auto;
+}
+
+/* Adicionar Requisito */
+#container-adicionar-requisito {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  margin: 100px auto;
+  background-color: #fff;
+  border-radius: 20px;
+  width: 1000px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+#container-adicionar-requisito select,
+#container-adicionar-requisito input,
+#container-adicionar-requisito textarea {
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  background-color: #F4F4F4;
+  color: #2E3A52;
+  padding: 12px 15px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+#container-adicionar-requisito input::placeholder,
+#container-adicionar-requisito textarea::placeholder,
+#container-adicionar-requisito select {
+  color: #2E3A52;
+  font-weight: bold;
+  opacity: 1;
+}
+
+#container-adicionar-requisito select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232E3A52' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 18px;
+}
+
+.linha {
+  width: 100%;
+  height: 2px;
+  background-color: #2E3A52;
+  margin: 5px 0;
+}
+
+.titulo-requisito input {
+  font-size: 1.2rem;
+}
+
+.descricao-requisito textarea {
+  height: 200px;
+  resize: none;
+  font-weight: normal;
+}
+
+.descricao-requisito textarea::placeholder {
+  font-size: 0.9rem;
+  font-weight: normal;
+}
+
+#container-adicionar-requisito input:focus::placeholder,
+#container-adicionar-requisito textarea:focus::placeholder {
+  color: #A0AEC0;
+  opacity: 0.7;
+  transition: color 0.1s ease-in-out;
+}
+
+.botao-adicionar-requisito {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.botao-adicionar-requisito button {
+  background-color: #2E3A52;
+  color: #FFFFFF;
+  margin-top: -70px;
+  width: 250px;
+  height: 50px;
+  border: none;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.botao-adicionar-requisito button:hover {
+  background-color: #1a2333;
+}
+
+.botao-adicionar-requisito button:active {
+  transform: scale(0.98);
 }

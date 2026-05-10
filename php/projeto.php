@@ -6,6 +6,6 @@
     <title>Projeto</title>
 </head>
 <body>
-    <h1>Tela do Projeto Selecionado</h1>
+    <a href="adicionar_requisito.php">Adicionar Requisito</a>
 </body>
 </html>

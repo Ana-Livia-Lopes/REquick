@@ -1,6 +1,3 @@
-<?php
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,35 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Requick - Escopo Inicial</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/novo_escopo.css">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <div class="BarraLateral">
-        <div class="LogoTopo">
-            <img src="../img/logo-requick.png" alt="Requick" class="ImagemLogo" />
-        </div>
-        <nav class="MenuNav">
-            <a href="#" class="ItemMenu ItemMenuAtivo">
-            <i class="fa-solid fa-layer-group"></i>
-                Dashboard
-            </a>
-            <a href="#" class="ItemMenu">
-            <i class="fa-solid fa-folder-open" style="color: rgb(255, 255, 255);"></i>
-                Projetos
-            </a>
-        </nav>
-        <div class="PerfilUsuario">
-            <div class="AvatarPerfil">VK</div>
-            <div class="InfoPerfil">
-                <p class="NomeUsuario">Victor Koba</p>
-                <p class="CargoUsuario">(administrador)</p>
-            </div>
-        </div>
-    </div>
+    <?php include 'navbar_lateral.php'?>
         <div class="div-container-escopo">
             <div class="div-flecha">
                 <a href="projeto.php" class="referencia-projeto">
