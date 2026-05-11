@@ -79,7 +79,7 @@
         <input type="date" id="InputPrevisao" class="CampoFormulario" />
       </div>
       <div class="CentralizarDiv2">
-        <a href="./projetos.php"><button class="BotaoCriar">Criar Projeto</button></a>
+        <a href="./novo_escopo.php"><button class="BotaoCriar">Criar Projeto</button></a>
       </div>
     </div>
   </div>
