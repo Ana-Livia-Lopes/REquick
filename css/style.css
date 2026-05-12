@@ -1,736 +1,826 @@
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Sora', sans-serif;
 }
 
 html, body {
-  height: 100%;
+    height: 100%;
 }
 
 body {
-  font-family: 'Sora', sans-serif;
-  background-color: #F5F8F9;
-  color: #1a1f2e;
-  display: grid;
-  grid-template-columns: 200px 1fr 350px;
-  min-height: 100vh;
+    background-color: #F5F8F9;
+    color: #1a1f2e;
+    min-height: 100vh;
 }
 
-
-/*barra laeral */
 .BarraLateral {
-  background-color: #2E3A52;
-  display: flex;
-  flex-direction: column;
-  padding: 24px 16px;
-  gap: 32px;
-  min-height: 100vh;
-  position: sticky;
-  top: 0;
-  overflow: hidden;
+    background-color: #2E3A52;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    gap: 32px;
+    width: 220px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
 }
 
 .LogoTopo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ImagemLogo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.NomeLogo {
-  font-size: 20px;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: -0.3px;
+    width: 100%;
+    max-width: 160px;
+    object-fit: contain;
 }
 
 .MenuNav {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    margin-top: 10px;
 }
 
 .ItemMenu {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 14px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  color: #8fa3c0;
-  transition: background-color 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    transition: background-color 0.2s, color 0.2s;
 }
 
+.ItemMenu i { color: #ffffff; }
+
 .ItemMenu:hover {
-  background-color: #3a4d6a;
-  color: #ffffff;
+    background-color: #3a4d6a;
 }
 
 .ItemMenuAtivo {
-  background-color: #ffffff;
-  color: #2E3A52;
-  font-weight: 600;
+    background-color: #ffffff;
+    color: #2E3A52;
+    font-weight: 600;
+    border: 1px solid #1a1f2e;
 }
+
+.ItemMenuAtivo i { color: #2E3A52; }
 
 .ItemMenuAtivo:hover {
-  background-color: #f0f2f5;
-  color: #2E3A52;
+    background-color: #f0f2f5;
+    color: #2E3A52;
 }
 
-
 .PerfilUsuario {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-top: 20px;
-  border-top: 1px solid #3a4d6a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #3a4d6a;
 }
 
 .AvatarPerfil {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background-color: #3a6fd8;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #2E3A52;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .InfoPerfil {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
 }
 
 .NomeUsuario {
-  font-size: 13px;
-  font-weight: 600;
-  color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .CargoUsuario {
-  font-size: 11px;
-  color: #8fa3c0;
+    font-size: 11px;
+    color: #8fa3c0;
 }
 
-
-/* main */
 .ConteudoPrincipal {
-  padding: 32px 28px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin: 0 85px;
+    margin-left: 220px;
+    padding: 32px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 100vh;
 }
 
 .CabecalhoPagina {
-  margin-bottom: 4px;
+    margin-bottom: 4px;
 }
 
 .TituloBoasVindas {
-  font-size: 26px;
-  font-weight: 700;
-  color: #1a1f2e;
-  letter-spacing: -0.5px;
-  line-height: 1.2;
-  margin: 10px 0;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1f2e;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin: 10px 0;
 }
 
-
-/* busca */
 .ContainerBusca {
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
 }
 
 .fa-magnifying-glass {
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
-  color: #9aa3b2;
-  pointer-events: none;
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: #9aa3b2;
+    pointer-events: none;
 }
 
 .CampoBusca {
-  width: 100%;
-  padding: 14px 16px 14px 46px;
-  border: 1.5px solid #e2e6ed;
-  border-radius: 12px;
-  font-family: 'Sora', sans-serif;
-  font-size: 14px;
-  color: #1a1f2e;
-  background-color: #ffffff;
-  transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    padding: 14px 16px 14px 46px;
+    border: 1.5px solid #e2e6ed;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #1a1f2e;
+    background-color: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.CampoBusca::placeholder {
-  color: #9aa3b2;
-}
+.CampoBusca::placeholder { color: #9aa3b2; }
 
 .CampoBusca:focus {
-  border-color: #2E3A52;
-  box-shadow: 0 0 0 3px rgba(46, 58, 82, 0.12);
+    border-color: #2E3A52;
+    box-shadow: 0 0 0 3px rgba(46, 58, 82, 0.12);
 }
 
-
-/* cards */
 .GradeEstatisticas {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
 }
 
 .CardEstatistica {
-  border-radius: 14px;
-  padding: 22px 20px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+    border-radius: 14px;
+    padding: 22px 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 }
 
 .CardEstatisticaEscuro {
-  background-color: #2E3A52;
-  color: #ffffff;
-  margin-top: 20px;
+    background-color: #2E3A52;
+    color: #ffffff;
 }
 
 .InfoCard {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .LabelCard {
-  font-size: 13px;
-  font-weight: 500;
-  color: #8fa3c0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #afbfd8;
 }
 
 .NumeroCard {
-  font-size: 36px;
-  font-weight: 700;
-  color: #ffffff;
-  line-height: 1;
+    font-size: 36px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
 }
 
 .SubtituloCard {
-  font-size: 12px;
-  color: #8fa3c0;
-  margin-top: 4px;
+    font-size: 12px;
+    color: #afbfd8;
+    margin-top: 4px;
 }
 
 .IconeCard {
-  width: 40px;
-  height: 40px;
-  background-color: rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #afbfd8;
 }
 
-
-/* projetos */
 .SecaoProjetos {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .CabecalhoProjetos {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .TituloSecao {
-  margin-top: 40px;
-  font-size: 20px;
-  font-weight: 700;
-  color: #1a1f2e;
-  letter-spacing: -0.3px;
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1f2e;
+    letter-spacing: -0.3px;
 }
 
 .BotaoCadastrar {
-  background-color: #ffffff;
-  color: #2E3A52;
-  border: 1.5px solid #d1d8e6;
-  border-radius: 10px;
-  padding: 9px 18px;
-  font-family: 'Sora', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
-  display: inline-block;
-  text-decoration: none;
+    background-color: #ffffff;
+    color: #2E3A52;
+    border: 1.5px solid #d1d8e6;
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    display: inline-block;
+    text-decoration: none;
 }
 
 .BotaoCadastrar:hover {
-  background-color: #f5f7fa;
-  border-color: #2E3A52;
+    background-color: #f5f7fa;
+    border-color: #2E3A52;
+}
+.BotaoProjetos{
+    background-color: #ffffff;
+    color: #2E3A52;
+    border: 1.5px solid #d1d8e6;
+    border-radius: 10px;
+    padding: 9px 15px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    display: inline-block;
+    text-decoration: none;
+    width: 177px;
 }
 
+.BotaoProjetos:hover {
+    background-color: #f5f7fa;
+    border-color: #2E3A52;
+}
 .GradeProjetos {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
 }
 
 .CardProjeto {
-  background-color: #ffffff;
-  border: 1.5px solid #e8edf5;
-  border-radius: 14px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: box-shadow 0.2s, border-color 0.2s;
+    background-color: #ffffff;
+    border: 1.5px solid #e8edf5;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: box-shadow 0.2s, border-color 0.2s;
 }
 
 .CardProjeto:hover {
-  box-shadow: 0 4px 16px rgba(26, 32, 53, 0.08);
-  border-color: #c2cfe0;
+    box-shadow: 0 4px 16px rgba(26, 32, 53, 0.08);
+    border-color: #c2cfe0;
 }
 
 .NomeProjeto {
-  font-size: 15px;
-  font-weight: 700;
-  color: #1a1f2e;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1f2e;
 }
 
 .DescricaoProjeto {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12.5px;
-  color: #6b7585;
-  line-height: 1.55;
-  flex: 1;
+    font-size: 12.5px;
+    color: #6b7585;
+    line-height: 1.55;
+    flex: 1;
 }
 
 .AutorAlteracao {
-  font-size: 11.5px;
-  color: #9aa3b2;
+    font-size: 11.5px;
+    color: #9aa3b2;
 }
 
 .AutorAlteracao strong {
-  color: #4a5568;
-  font-weight: 600;
+    color: #4a5568;
+    font-weight: 600;
 }
 
 .BotaoAcessar {
-  background-color: #2E3A52;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 9px 0;
-  width: 100%;
-  font-family: 'Sora', sans-serif;
-  font-size: 12.5px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 4px;
-  transition: background-color 0.2s;
+    background-color: #2E3A52;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 0;
+    width: 100%;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: background-color 0.2s;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .BotaoAcessar:hover {
-  background-color: #3a4d6a;
+    background-color: #3a4d6a;
 }
 
-
-/* feed */
-.CentralizarDiv{
-  height: 100vh;
-  display: flex;
-  align-items: center;
-}
 .FeedAtividades {
-  background-color: #ffffff;
-  padding: 28px 22px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  position: sticky;
-  top: 0;
-  height: 70vh;
-  align-items: center;
-  justify-content: center;
-  border: #cfd2dd solid 1.5px;
-  border-radius: 10px;
-  margin-right: 45px;
+    background-color: #ffffff;
+    padding: 24px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: #cfd2dd solid 1.5px;
+    border-radius: 10px;
+    margin-top: 24px;
 }
 
 .TituloFeed {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1a1f2e;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1f2e;
 }
 
 .ListaAtividades {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
 }
 
 .ItemAtividade {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 16px 0;
-  border-bottom: 1px solid #f0f3f8;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f3f8;
 }
 
-.ItemAtividade:last-child {
-  border-bottom: none;
-}
+.ItemAtividade:last-child { border-bottom: none; }
 
 .AvatarAtividade {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #3a6fd8;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #3a6fd8;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-
 .ConteudoAtividade {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
 }
 
 .LinhaAtividade {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
 }
 
 .NomeAtividade {
-  font-size: 13px;
-  font-weight: 700;
-  color: #1a1f2e;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1f2e;
 }
 
 .TempoAtividade {
-  font-size: 11px;
-  color: #9aa3b2;
-  white-space: nowrap;
+    font-size: 11px;
+    color: #9aa3b2;
+    white-space: nowrap;
 }
 
 .TextoAtividade {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12.5px;
-  color: #6b7585;
+    font-size: 12.5px;
+    color: #6b7585;
 }
 
-
-/* modal */
-.CheckboxModal {
-  display: none;
+.div-container-escopo {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
-.FundoModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
+.div-flecha .referencia-projeto {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #1a1f2e;
+    text-decoration: none;
+    font-weight: 600;
 }
 
-.CheckboxModal:checked ~ .FundoModal {
-  display: flex;
+.div-flecha .referencia-projeto:hover { opacity: 0.75; }
+
+.titulo-escopo {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1f2e;
 }
 
-.SombreaModal {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(10, 15, 30, 0.55);
-  cursor: pointer;
+.subtitulo-escopo {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6b7585;
+    line-height: 1.5;
+    margin-top: 6px;
+    max-width: 900px;
 }
 
-.ContainerModal {
-  position: relative;
-  background-color: #2E3A52;
-  border-radius: 18px;
-  padding: 32px 28px;
-  width: 100%;
-  max-width: 480px;
-  max-height: 90vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  box-shadow: 0 20px 60px rgba(10, 15, 30, 0.25);
-  z-index: 101;
-  margin: 16px;
+#container-adicionar-requisito {
+    background-color: #ffffff;
+    border: 1.5px solid #e8edf5;
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.BotaoVoltar {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #bbbbcb;
-  cursor: pointer;
-  width: fit-content;
-  text-decoration: none;
-  transition: opacity 0.2s;
+#container-adicionar-requisito select,
+#container-adicionar-requisito input,
+#container-adicionar-requisito textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #dde3ef;
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #1a1f2e;
+    outline: none;
+    font-family: 'Sora', sans-serif;
 }
 
-.BotaoVoltar:hover {
-  opacity: 0.7;
+#container-adicionar-requisito textarea {
+    min-height: 140px;
+    resize: vertical;
 }
 
-.LogoModal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.linha {
+    height: 1px;
+    background-color: #e8edf5;
 }
 
-.ImagemLogoModal {
-  width: 80%;
-  height: 80%;
-  object-fit: contain;
+.botao-adicionar-requisito {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
 }
 
-.TituloModal {
-  font-size: 22px;
-  font-weight: 700;
-  color: #ffffff;
-  text-align: center;
-  letter-spacing: -0.4px;
+.botao-adicionar-requisito button {
+    background-color: #2E3A52;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.GrupoFormulario {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.botao-adicionar-requisito button:hover { background-color: #3a4d6a; }
+
+#container-texto {
+    background-color: #ffffff;
+    border: 1.5px solid #e8edf5;
+    border-radius: 14px;
+    padding: 18px;
 }
 
-.LabelFormulario {
-  font-size: 13px;
-  font-weight: 600;
-  color: #ffffff;
+#toolbar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #eef1f6;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
 }
 
-.CampoFormulario {
-  width: 100%;
-  padding: 11px 14px;
-  border: 1.5px solid #dde3ef;
-  border-radius: 10px;
-  font-family: 'Sora', sans-serif;
-  font-size: 13.5px;
-  color: #1a1f2e;
-  background-color: #ffffff;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  resize: none;
+#toolbar .group {
+    display: flex;
+    gap: 6px;
 }
 
-.CampoFormulario::placeholder {
-  color: #565d62;
+#toolbar button {
+    background-color: #f5f7fa;
+    border: 1px solid #e2e6ed;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1f2e;
 }
 
-.CampoFormulario:focus {
-  border-color: #2E3A52;
-  box-shadow: 0 0 0 3px rgba(46, 58, 82, 0.1);
+#toolbar button:hover { background-color: #e8edf5; }
+
+#editor {
+    min-height: 300px;
+    padding: 8px 4px;
+    outline: none;
+    font-size: 14px;
+    color: #1a1f2e;
 }
 
-.CampoTextarea {
-  min-height: 80px;
+.CardPerfil {
+    background-color: #ffffff;
+    border: 1.5px solid #e8edf5;
+    border-radius: 14px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
-.ContainerSelect {
-  position: relative;
+.CabecalhoPerfil {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
 }
 
-.CampoSelect {
-  width: 100%;
-  padding: 11px 40px 11px 14px;
-  border: 1.5px solid #dde3ef;
-  border-radius: 10px;
-  font-family: 'Sora', sans-serif;
-  font-size: 13.5px;
-  color: #1a1f2e;
-  background-color: #ffffff;
-  outline: none;
-  appearance: none;
-  cursor: pointer;
-  transition: border-color 0.2s;
+.AvatarPerfilGrande {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background-color: #2E3A52;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 700;
 }
 
-.CampoSelect:focus {
-  border-color: #2E3A52;
+.InfoPerfilGrande {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.fa-chevron-down {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: #9aa3b2;
-  pointer-events: none;
+.InfoPerfilGrande h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1f2e;
 }
 
-.BotaoCriarProjeto {
-  background-color: #ffffff;
-  color: #2E3A52;
-  border: 2px solid #2E3A52;
-  border-radius: 10px;
-  padding: 13px;
-  width: 60%;
-  font-family: 'Sora', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-  text-align: center;
-  cursor: pointer;
-  margin-top: 4px;
-  transition: background-color 0.2s, color 0.2s;
-}
-.CentralizarDiv2{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-.BotaoCriarProjeto:hover {
-  background-color: #bdc2cb;
+.InfoPerfilGrande p {
+    font-size: 13px;
+    color: #6b7585;
+    font-weight: 600;
 }
 
+.InfoPerfilGrande span {
+    font-size: 13px;
+    color: #6b7585;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.GradeEstatisticasPerfil {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.BlocoDadosPerfil {
+    border-top: 1px solid #eef1f6;
+    padding-top: 20px;
+}
+
+.BlocoDadosPerfil h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1f2e;
+    margin-bottom: 12px;
+}
+
+.BlocoDadosPerfil ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.BlocoDadosPerfil li {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f3f8;
+    font-size: 13.5px;
+}
+
+.BlocoDadosPerfil li span { color: #6b7585; }
+
+.BlocoDadosPerfil li strong {
+    color: #1a1f2e;
+    font-weight: 600;
+}
+
+.CardConfig {
+    background-color: #ffffff;
+    border: 1.5px solid #e8edf5;
+    border-radius: 14px;
+    padding: 24px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.CardConfig h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1f2e;
+}
+
+.LinhaConfig {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f3f8;
+}
+
+.LinhaConfig:last-child { border-bottom: none; }
+
+.LinhaConfig strong {
+    font-size: 14px;
+    color: #1a1f2e;
+    display: block;
+}
+
+.LinhaConfig p {
+    font-size: 12.5px;
+    color: #6b7585;
+    margin-top: 2px;
+}
+
+.Switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 26px;
+}
+
+.Switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.Slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #cfd6e4;
+    border-radius: 26px;
+    transition: 0.2s;
+}
+
+.Slider::before {
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.Switch input:checked + .Slider { background-color: #2E3A52; }
+.Switch input:checked + .Slider::before { transform: translateX(20px); }
+
+.FormConfig {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.FormConfig label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1f2e;
+}
+
+.FormConfig input {
+    padding: 11px 14px;
+    border: 1.5px solid #dde3ef;
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #1a1f2e;
+    outline: none;
+    font-family: 'Sora', sans-serif;
+}
+
+.FormConfig input:focus { border-color: #2E3A52; }
+
+.BotaoSalvarConfig {
+    align-self: flex-start;
+    background-color: #2E3A52;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+}
+
+.BotaoSalvarConfig:hover { background-color: #3a4d6a; }
 
 @media (max-width: 1100px) {
-  body {
-    grid-template-columns: 180px 1fr 140px;
-  }
-
-  .GradeEstatisticas {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .GradeProjetos {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    .GradeEstatisticas, .GradeEstatisticasPerfil { grid-template-columns: repeat(2, 1fr); }
+    .GradeProjetos { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 900px) {
-  body {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    overflow: auto;
-    height: auto;
-  }
-
-  .BarraLateral {
-    position: static;
-    height: auto;
-    min-height: unset;
-    flex-direction: row;
-    align-items: center;
-    padding: 14px 20px;
-    gap: 16px;
-  }
-
-  .MenuNav {
-    flex-direction: row;
-    flex: 1;
-    gap: 8px;
-  }
-
-  .PerfilUsuario {
-    border-top: none;
-    border-left: 1px solid #3a4d6a;
-    padding-top: 0;
-    padding-left: 16px;
-  }
-
-  .InfoPerfil {
-    display: none;
-  }
-
-  .ConteudoPrincipal {
-    padding: 24px 20px;
-    margin: 0 15px;
-  }
-  .CentralizarDiv{
-    height: auto;
-    align-items: center;
-    justify-content: center; 
-  }
-
-  .FeedAtividades {
-    position: static;
-    height: auto;
-    border-left: none;
-    border-top: 1.5px solid #e8edf5;
-    padding: 24px 20px;
-    margin-right: 0;
-  }
-
-  .GradeEstatisticas {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .GradeProjetos {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    .BarraLateral {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        padding: 14px 20px;
+        gap: 16px;
+    }
+    .MenuNav {
+        flex-direction: row;
+        flex: 1;
+        gap: 8px;
+        margin-top: 0;
+    }
+    .PerfilUsuario {
+        border-top: none;
+        border-left: 1px solid #3a4d6a;
+        padding-top: 0;
+        padding-left: 16px;
+    }
+    .InfoPerfil { display: none; }
+    .ConteudoPrincipal {
+        margin-left: 0;
+        padding: 24px 20px;
+    }
+    .GradeEstatisticas, .GradeEstatisticasPerfil { grid-template-columns: 1fr; }
+    .GradeProjetos { grid-template-columns: 1fr; }
 }
-
-@media (max-width: 600px) {
-  .BarraLateral {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .NomeLogo {
-    font-size: 17px;
-  }
-
-  .TituloBoasVindas {
-    font-size: 20px;
-  }
-
-  .GradeEstatisticas {
-    grid-template-columns: 1fr;
-  }
-
-  .GradeProjetos {
-    grid-template-columns: 1fr;
-  }
-
-  .ContainerModal {
-    padding: 24px 18px;
-  }
+.LinkPerfil {
+    text-decoration: none;
+    color: inherit; /* Mantém a cor original do texto */
+    display: block;
+}
+.PerfilUsuario:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Efeito de hover suave */
 }

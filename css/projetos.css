@@ -1,0 +1,149 @@
+/* =========================
+   MODAL NOVO PROJETO
+========================= */
+
+.CheckboxModal {
+  display: none;
+}
+
+/* fundo escuro discreto */
+.FundoModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: .25s ease;
+  z-index: 9999;
+}
+
+.CheckboxModal:checked ~ .FundoModal {
+  opacity: 1;
+  visibility: visible;
+}
+
+.SombreaModal {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+}
+
+/* caixa modal */
+.ContainerModal {
+  position: relative;
+  width: 360px;
+  max-width: 92%;
+  background: #33415f;
+  border-radius: 24px;
+  padding: 22px 24px 26px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.22);
+  z-index: 2;
+  animation: modalEntrada .25s ease;
+}
+
+@keyframes modalEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* voltar */
+.BotaoVoltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 14px;
+}
+
+/* logo */
+.LogoModal {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.ImagemLogoModal {
+  width: 135px;
+}
+
+/* título */
+.TituloModal {
+  text-align: center;
+  color: #fff;
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+/* grupos */
+.GrupoFormulario {
+  margin-bottom: 13px;
+}
+
+.LabelFormulario {
+  display: block;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+/* inputs */
+.CampoFormulario {
+  width: 100%;
+  height: 40px;
+  border: none;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 13px;
+  outline: none;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.CampoFormulario::placeholder {
+  color: #94a3b8;
+}
+
+.CampoTextarea {
+  height: 70px;
+  resize: none;
+  padding-top: 10px;
+}
+
+/* botão */
+.CentralizarDiv2 {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.BotaoCriar {
+  border: none;
+  background: #fff;
+  color: #24324f;
+  font-weight: 700;
+  font-size: 18px;
+  padding: 10px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .2s;
+  box-shadow: 0 5px 12px rgba(0,0,0,.14);
+}
+
+.BotaoCriar:hover {
+  transform: translateY(-2px);
+}
