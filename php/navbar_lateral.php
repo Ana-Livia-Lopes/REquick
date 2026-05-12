@@ -5,7 +5,7 @@
     </div>
 
     <nav class="MenuNav">
-        <a href="../index.php" class="ItemMenu <?= $paginaAtiva === 'dashboard' ? 'ItemMenuAtivo' : '' ?>">
+        <a href="../index.php" class="ItemMenu ">
             <i class="fa-solid fa-layer-group"></i>
             Dashboard
         </a>
@@ -30,3 +30,5 @@
         </div>
     </a>
 </aside>
+
+

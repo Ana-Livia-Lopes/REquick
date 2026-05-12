@@ -3,7 +3,7 @@
 $host = 'localhost'; 
 $usuario = 'root'; 
 $senha = '';
-$banco = 'bd_requick';
+$banco = 'requick';
 
 try {
     $conn = new mysqli($host, $usuario, $senha, $banco);

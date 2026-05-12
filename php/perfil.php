@@ -24,7 +24,7 @@
                     <p>Administrador</p>
                     <span><i class="fa-solid fa-envelope"></i> victor.koba@requick.com</span>
                 </div>
-                <a href="editar_perfil.php" class="BotaoCadastrar">Editar perfil</a>
+                <a href="configuracoes.php" class="BotaoCadastrar">Editar perfil</a>
             </div>
 
             <div class="GradeEstatisticasPerfil">

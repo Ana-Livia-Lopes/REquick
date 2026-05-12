@@ -24,7 +24,7 @@
         </div>
 
         <nav class="MenuNav">
-            <a href="index.html" class="ItemMenu ItemMenuAtivo">
+            <a href="index.php" class="ItemMenu ItemMenuAtivo">
                 <i class="fa-solid fa-layer-group"></i>
                 Dashboard
             </a>

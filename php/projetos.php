@@ -1,4 +1,3 @@
-<?php $base = '../'; $ativo = 'projetos'; ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -13,6 +12,7 @@
 <body class="LayoutPadrao">
 
   <?php include 'navbar_lateral.php'; ?>
+  <?php $paginaAtiva = 'projetos'; include 'navbar_lateral.php'; ?>
 
   <div class="AreaRolavel AreaRolavelDashboard">
     <main class="ConteudoPrincipal">
