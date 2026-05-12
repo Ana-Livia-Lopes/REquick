@@ -1,9 +1,9 @@
 <?php
 // Use o IP Público (IPv4) que aparece no painel da instância EC2
-$host = '54.197.1.126'; 
-$usuario = 'aluno'; 
-$senha = 'aluno123';
-$banco = 'requickdb';
+$host = 'localhost'; 
+$usuario = 'root'; 
+$senha = '';
+$banco = 'bd_requick';
 
 try {
     $conn = new mysqli($host, $usuario, $senha, $banco);
