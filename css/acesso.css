@@ -70,3 +70,10 @@ a{
 .BotaoEntrar:hover {
   background-color: #3a4d6a;
 }
+
+.MensagemErro {
+    text-align: center; 
+    color:#e74c3c; 
+    margin-bottom:12px; 
+    font-size:.9rem;
+}

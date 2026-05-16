@@ -1,18 +1,27 @@
+<?php
+session_start();
+ 
+if (!isset($_SESSION['usuario_id'])) {
+    header('Location: ../index.php');
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Requick – Dashboard</title>
-    <link rel="stylesheet" href="./css/style.css" />
-    <link rel="stylesheet" href="./css/projetos.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/projetos.css" />
     
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <?php
-        require_once 'php/projeto_acoes.php'; 
+        require_once './projeto_acoes.php'; 
         $projetos = new \php\Projeto();
         $projetoDao = new \php\ProjetoDao($projetos);
 
@@ -20,7 +29,7 @@
     ?>
     <aside class="BarraLateral">
         <div class="LogoTopo">
-            <img src="img/logo-requick.png" alt="Requick" class="ImagemLogo" />
+            <img src="../img/logo-requick.png" alt="Requick" class="ImagemLogo" />
         </div>
 
         <nav class="MenuNav">
@@ -42,7 +51,7 @@
         <div class="PerfilUsuario <?= $paginaAtiva === 'perfil' ? 'PerfilAtivo' : '' ?>">
             <div class="AvatarPerfil">VK</div>
             <div class="InfoPerfil">
-                <p class="NomeUsuario">Victor Koba</p>
+                <p class="NomeUsuario"><?= $_SESSION['usuario_nome'] ?></p>
                 <p class="CargoUsuario">(administrador)</p>
             </div>
         </div>
@@ -52,7 +61,7 @@
     <div class="ConteudoPrincipal">
 
         <header class="CabecalhoPagina">
-            <h1 class="TituloBoasVindas">Olá Victor, bem-vindo(a) ao Dashboard!</h1>
+            <h1 class="TituloBoasVindas">Olá <?= $_SESSION['usuario_nome'] ?>, bem-vindo(a) ao Dashboard!</h1>
         </header>
 
         <div class="ContainerBusca">
