@@ -1,15 +1,24 @@
+<!-- Projeto -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Requick – Projetos</title>
+  <title>Requick - Projetos</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/projetos.css" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body class="LayoutPadrao">
+
+    <?php
+      require_once 'projeto_acoes.php'; 
+      $projetos = new \php\Projeto();
+      $projetoDao = new \php\ProjetoDao($projetos);
+
+
+    ?>
 
   <?php include 'navbar_lateral.php'; ?>
   <?php $paginaAtiva = 'projetos'; include 'navbar_lateral.php'; ?>
@@ -33,23 +42,52 @@
         </div>
 
         <div class="GradeProjetos">
-          <?php
-          $lista = [
-            ['E-commerce Alpha', 'Victor Koba'],
-            ['Projeto Beta', 'João Pedro'],
-            ['Projeto Abençoado', 'Jacquys'],
-            ['App Gamma', 'Ana Lívia'],
-            ['Sistema Delta', 'Vitório'],
-            ['Portal Epsilon', 'Jhônatas'],
-          ];
-          foreach ($lista as $p): ?>
-            <div class="CardProjeto">
-              <h3 class="NomeProjeto"><?= htmlspecialchars($p[0]) ?></h3>
-              <p class="DescricaoProjeto">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse lacinia loremipsum...</p>
-              <p class="AutorAlteracao">Última alteração feita por <strong><?= htmlspecialchars($p[1]) ?></strong></p>
-              <a href="projeto.php" class="BotaoAcessar">Acessar projeto</a>
-            </div>
-          <?php endforeach; ?>
+          <?php foreach ($projetoDao->read_projetos() as $projeto): ?>
+                    <div class="CardProjeto">
+
+                        <h3 class="NomeProjeto">
+                            <?= htmlspecialchars($projeto['nome_projeto']) ?>
+                        </h3>
+
+                        <p class="DescricaoProjeto">
+                            <?= !empty($projeto['descricao']) 
+                                ? htmlspecialchars($projeto['descricao']) 
+                                : 'Sem descrição disponível' ?>
+                        </p>
+
+                        <p class="AutorAlteracao">
+                            <?php if (!empty($projeto['autor'])): ?>
+
+                                Última alteração feita por 
+                                <strong>
+                                    <?= htmlspecialchars($projeto['autor']) ?>
+                                </strong>
+
+                                <br>
+
+                                <small>
+                                    <?= htmlspecialchars($projeto['modificacao']) ?>
+                                </small>
+
+                                <br>
+
+                                <small>
+                                    <?= date('d/m/Y H:i', strtotime($projeto['data_modificacao'])) ?>
+                                </small>
+
+                            <?php else: ?>
+
+                                <em>Nenhuma alteração registrada</em>
+
+                            <?php endif; ?>
+                        </p>
+
+                        <a href="php/projeto.php?id=<?= $projeto['id'] ?>" class="BotaoAcessar">
+                            Acessar projeto
+                        </a>
+
+                    </div>
+                <?php endforeach; ?>
         </div>
       </div>
     </main>

@@ -89,6 +89,49 @@ class ProjetoDao{
 
         return [];
     }
+
+    public function read_projetos(){
+        $sql = "
+            SELECT 
+                p.id,
+                p.nome_projeto,
+                p.descricao,
+                p.data_criacao,
+
+                h.modificacao,
+                h.data AS data_modificacao,
+
+                u.nome AS autor
+
+            FROM tb_projetos p
+
+            LEFT JOIN tb_historico h 
+                ON h.id = (
+                    SELECT h2.id
+                    FROM tb_historico h2
+                    WHERE h2.id_requisito = p.id
+                    ORDER BY h2.data DESC
+                    LIMIT 1
+                )
+
+            LEFT JOIN tb_usuarios u
+                ON u.id = h.autor
+
+            ORDER BY p.id DESC
+        ";
+
+        $result = Conexao::getConn()->query($sql);
+
+        if ($result) {
+
+            $dados = $result->fetchAll(PDO::FETCH_ASSOC);
+
+            return $dados;
+        }
+
+        return [];
+    }
+
     public function countStatus(){
 
         $sql = "

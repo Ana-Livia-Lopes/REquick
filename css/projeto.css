@@ -5,9 +5,11 @@
   font-family: 'Sora', sans-serif;
 }
 
-html, body {
+html,
+body {
   height: 100%;
-  overflow: hidden; /* só a área central rola */
+  overflow: hidden;
+  /* só a área central rola */
 }
 
 body {
@@ -64,7 +66,9 @@ body {
   transition: background-color 0.2s, color 0.2s;
 }
 
-.ItemMenu i { color: #ffffff; }
+.ItemMenu i {
+  color: #ffffff;
+}
 
 .ItemMenu:hover {
   background-color: #3a4d6a;
@@ -76,8 +80,15 @@ body {
   font-weight: 600;
   border: 1px solid #1a1f2e;
 }
-.ItemMenuAtivo i { color: #2E3A52; }
-.ItemMenuAtivo:hover { background-color: #f0f2f5; color: #2E3A52; }
+
+.ItemMenuAtivo i {
+  color: #2E3A52;
+}
+
+.ItemMenuAtivo:hover {
+  background-color: #f0f2f5;
+  color: #2E3A52;
+}
 
 .PerfilUsuario {
   display: flex;
@@ -112,6 +123,7 @@ body {
   font-weight: 600;
   color: #ffffff;
 }
+
 .CargoUsuario {
   font-size: 11px;
   color: #8fa3c0;
@@ -119,10 +131,12 @@ body {
 
 /* =================== ÁREA ROLÁVEL =================== */
 .AreaRolavel {
-  margin-left: 220px;          /* deixa espaço para a sidebar fixa */
+  margin-left: 220px;
+  /* deixa espaço para a sidebar fixa */
   width: calc(100% - 220px);
   height: 100vh;
-  overflow-y: auto;            /* SOMENTE o conteúdo rola */
+  overflow-y: auto;
+  /* SOMENTE o conteúdo rola */
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 24px;
@@ -155,7 +169,10 @@ body {
   text-decoration: none;
   cursor: pointer;
 }
-.LinkVoltar:hover { opacity: 0.75; }
+
+.LinkVoltar:hover {
+  opacity: 0.75;
+}
 
 .AcoesCabecalho {
   display: flex;
@@ -176,21 +193,30 @@ body {
   text-decoration: none;
   transition: transform 0.15s ease, opacity 0.2s;
 }
-.btn-header:hover { opacity: 0.9; }
+
+.btn-header:hover {
+  opacity: 0.9;
+}
 
 .btn-dark {
   background-color: #1a1f2e;
   color: #ffffff;
 }
-.btn-dark i { color: #ffffff; }
+
+.btn-dark i {
+  color: #ffffff;
+}
 
 .btn-light {
   background-color: #ffffff;
   color: #1a1f2e;
   border: 1px solid #e2e6ed;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
 }
-.btn-light i { color: #1a1f2e; }
+
+.btn-light i {
+  color: #1a1f2e;
+}
 
 .TituloProjeto {
   font-size: 30px;
@@ -203,7 +229,7 @@ body {
 .bloco-comentarios {
   background: #ffffff;
   border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   border: 1px solid #eef0f3;
   position: relative;
 }
@@ -250,9 +276,20 @@ body {
   flex-shrink: 0;
 }
 
-.conteudo-comentario { flex: 1; }
-.conteudo-comentario p { margin: 0 0 6px; font-size: 14px; color: #1a1f2e; }
-.conteudo-comentario span { font-size: 12px; color: #9aa3b2; }
+.conteudo-comentario {
+  flex: 1;
+}
+
+.conteudo-comentario p {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #1a1f2e;
+}
+
+.conteudo-comentario span {
+  font-size: 12px;
+  color: #9aa3b2;
+}
 
 .seta-container {
   display: flex;
@@ -261,7 +298,10 @@ body {
   color: #1a1f2e;
   cursor: pointer;
 }
-.seta-container i { font-size: 16px; }
+
+.seta-container i {
+  font-size: 16px;
+}
 
 /* ----------- Busca + Adicionar ----------- */
 #busca-e-add-requisito {
@@ -295,7 +335,11 @@ body {
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.CampoBusca::placeholder { color: #9aa3b2; }
+
+.CampoBusca::placeholder {
+  color: #9aa3b2;
+}
+
 .CampoBusca:focus {
   border-color: #2E3A52;
   box-shadow: 0 0 0 3px rgba(46, 58, 82, 0.1);
@@ -316,6 +360,7 @@ body {
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
 }
+
 .BotaoCadastrar:hover {
   background-color: #f5f7fa;
   border-color: #2E3A52;
@@ -325,7 +370,7 @@ body {
 .container-requisitos {
   background: #ffffff;
   border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   border: 1px solid #eef0f3;
   overflow: hidden;
 }
@@ -354,6 +399,7 @@ body {
   align-items: center;
   gap: 12px;
 }
+
 .icone-req {
   width: 32px;
   height: 32px;
@@ -366,8 +412,17 @@ body {
   font-size: 13px;
   flex-shrink: 0;
 }
-.col-titulo strong { display: block; color: #1a1f2e; font-size: 14px; }
-.col-titulo span { font-size: 11px; color: #a0a6b5; }
+
+.col-titulo strong {
+  display: block;
+  color: #1a1f2e;
+  font-size: 14px;
+}
+
+.col-titulo span {
+  font-size: 11px;
+  color: #a0a6b5;
+}
 
 .badge {
   padding: 6px 14px;
@@ -376,8 +431,16 @@ body {
   font-weight: 700;
   display: inline-block;
 }
-.yellow { background: #fdf6b2; color: #723b10; }
-.green  { background: #def7ec; color: #03543f; }
+
+.yellow {
+  background: #fdf6b2;
+  color: #723b10;
+}
+
+.green {
+  background: #def7ec;
+  color: #03543f;
+}
 
 .col-acoes {
   display: flex;
@@ -402,10 +465,24 @@ body {
   cursor: pointer;
   transition: background 0.15s;
 }
-.btn-excluir { color: #c81e1e; border-color: #fbd5d5; background: #fff5f5; }
-.btn-excluir:hover { background: #fde1e1; }
-.btn-editar { color: #1a1f2e; }
-.btn-editar:hover { background: #f5f7fa; }
+
+.btn-excluir {
+  color: #c81e1e;
+  border-color: #fbd5d5;
+  background: #fff5f5;
+}
+
+.btn-excluir:hover {
+  background: #fde1e1;
+}
+
+.btn-editar {
+  color: #1a1f2e;
+}
+
+.btn-editar:hover {
+  background: #f5f7fa;
+}
 
 .tabela-footer {
   display: flex;
@@ -446,7 +523,11 @@ body {
   margin-bottom: 8px;
 }
 
-.bloco-info { display: flex; flex-direction: column; gap: 6px; }
+.bloco-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
 .barra {
   width: 100%;
@@ -455,11 +536,13 @@ body {
   border-radius: 5px;
   overflow: hidden;
 }
+
 .progresso {
   height: 100%;
   background-color: #2563eb;
   border-radius: 5px;
 }
+
 .percentual {
   font-size: 14px;
   font-weight: 700;
@@ -471,9 +554,22 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.rotulo { font-size: 13px; font-weight: 600; color: #1a1f2e; }
-.valor  { font-size: 13px; color: #6b7585; }
-.valor-bloco { font-size: 13px; color: #6b7585; }
+
+.rotulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1f2e;
+}
+
+.valor {
+  font-size: 13px;
+  color: #6b7585;
+}
+
+.valor-bloco {
+  font-size: 13px;
+  color: #6b7585;
+}
 
 /* ----------- Feed ----------- */
 .FeedAtividades {
@@ -505,7 +601,10 @@ body {
   padding: 14px 0;
   border-bottom: 1px solid #f0f3f8;
 }
-.ItemAtividade:last-child { border-bottom: none; }
+
+.ItemAtividade:last-child {
+  border-bottom: none;
+}
 
 .AvatarAtividade {
   width: 36px;
@@ -521,7 +620,12 @@ body {
   flex-shrink: 0;
 }
 
-.ConteudoAtividade { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.ConteudoAtividade {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
 
 .LinhaAtividade {
   display: flex;
@@ -529,12 +633,28 @@ body {
   justify-content: space-between;
   gap: 8px;
 }
-.NomeAtividade { font-size: 13px; font-weight: 700; color: #1a1f2e; }
-.TempoAtividade { font-size: 11px; color: #9aa3b2; white-space: nowrap; }
-.TextoAtividade { font-size: 12.5px; color: #6b7585; }
+
+.NomeAtividade {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1f2e;
+}
+
+.TempoAtividade {
+  font-size: 11px;
+  color: #9aa3b2;
+  white-space: nowrap;
+}
+
+.TextoAtividade {
+  font-size: 12.5px;
+  color: #6b7585;
+}
 
 /* =================== MODAL =================== */
-.CheckboxModal { display: none; }
+.CheckboxModal {
+  display: none;
+}
 
 .FundoModal {
   display: none;
@@ -545,7 +665,9 @@ body {
   justify-content: center;
 }
 
-.CheckboxModal:checked ~ .FundoModal { display: flex; }
+.CheckboxModal:checked~.FundoModal {
+  display: flex;
+}
 
 .SombreaModal {
   position: absolute;
@@ -580,7 +702,10 @@ body {
   width: fit-content;
   text-decoration: none;
 }
-.BotaoVoltar:hover { opacity: 0.7; }
+
+.BotaoVoltar:hover {
+  opacity: 0.7;
+}
 
 .TituloModal {
   font-size: 22px;
@@ -589,8 +714,17 @@ body {
   text-align: center;
 }
 
-.GrupoFormulario { display: flex; flex-direction: column; gap: 6px; }
-.LabelFormulario { font-size: 13px; font-weight: 600; color: #ffffff; }
+.GrupoFormulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.LabelFormulario {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
 
 .CampoFormulario,
 .CampoSelect {
@@ -604,7 +738,10 @@ body {
   outline: none;
 }
 
-.ContainerSelect { position: relative; }
+.ContainerSelect {
+  position: relative;
+}
+
 .ContainerSelect .fa-chevron-down {
   position: absolute;
   right: 14px;
@@ -614,7 +751,10 @@ body {
   pointer-events: none;
 }
 
-.CentralizarDiv2 { display: flex; justify-content: center; }
+.CentralizarDiv2 {
+  display: flex;
+  justify-content: center;
+}
 
 .BotaoCriarProjeto {
   background-color: #ffffff;
@@ -629,7 +769,10 @@ body {
   cursor: pointer;
   transition: background-color 0.2s;
 }
-.BotaoCriarProjeto:hover { background-color: #e5e7eb; }
+
+.BotaoCriarProjeto:hover {
+  background-color: #e5e7eb;
+}
 
 /* =================== RESPONSIVO =================== */
 @media (max-width: 1180px) {
@@ -639,8 +782,15 @@ body {
 }
 
 @media (max-width: 760px) {
-  html, body { overflow: auto; }
-  body { flex-direction: column; }
+
+  html,
+  body {
+    overflow: auto;
+  }
+
+  body {
+    flex-direction: column;
+  }
 
   .BarraLateral {
     position: static;
@@ -651,8 +801,16 @@ body {
     padding: 14px 18px;
     gap: 16px;
   }
-  .MenuNav { flex-direction: row; flex: 1; }
-  .PerfilUsuario { border-top: none; padding-top: 0; }
+
+  .MenuNav {
+    flex-direction: row;
+    flex: 1;
+  }
+
+  .PerfilUsuario {
+    border-top: none;
+    padding-top: 0;
+  }
 
   .AreaRolavel {
     margin-left: 0;
@@ -662,137 +820,480 @@ body {
     padding: 20px;
   }
 
-  .tabela-header, .tabela-linha {
+  .tabela-header,
+  .tabela-linha {
     grid-template-columns: 1fr;
     text-align: left;
   }
-  .col-acoes { flex-direction: row; }
+
+  .col-acoes {
+    flex-direction: row;
+  }
 }
+
 /* =======================
    MODAL CONVIDAR
 ======================= */
 
 .CheckboxModal {
-    display: none;
+  display: none;
 }
 
 .FundoModal {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, .35);
-    backdrop-filter: blur(2px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: .25s;
-    z-index: 9999;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, .35);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: .25s;
+  z-index: 9999;
 }
 
-.CheckboxModal:checked ~ .FundoModal {
-    opacity: 1;
-    visibility: visible;
+.CheckboxModal:checked~.FundoModal {
+  opacity: 1;
+  visibility: visible;
 }
 
 .SombreaModal {
-    position: absolute;
-    inset: 0;
-    cursor: pointer;
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
 }
 
 .ContainerModal {
-    position: relative;
-    width: 500px;
-    background: #33415f;
-    border-radius: 22px;
-    padding: 20px;
-    box-shadow: 0 15px 40px rgba(0,0,0,.18);
-    z-index: 2;
+  position: relative;
+  width: 500px;
+  background: #33415f;
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, .18);
+  z-index: 2;
 }
 
 .BotaoVoltar {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: #fff;
-    font-size: 13px;
-    cursor: pointer;
-    margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 12px;
 }
 
 .LogoModal {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
 }
 
 .ImagemLogoModal {
-    width: 205px;
-    height: auto;
-    object-fit: contain;
+  width: 205px;
+  height: auto;
+  object-fit: contain;
 }
 
 .TituloModal {
-    text-align: center;
-    color: #fff;
-    font-size: 19px;
-    font-weight: 700;
-    margin-bottom: 18px;
+  text-align: center;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 18px;
 }
 
 .GrupoFormulario {
-    margin-bottom: 14px;
+  margin-bottom: 14px;
 }
 
 .LabelFormulario {
-    display: block;
-    color: #fff;
-    font-size: 13px;
-    margin-bottom: 6px;
+  display: block;
+  color: #fff;
+  font-size: 13px;
+  margin-bottom: 6px;
 }
 
 .CampoFormulario {
-    width: 100%;
-    height: 32px;
-    border: none;
-    border-radius: 8px;
-    padding: 0 12px;
-    font-size: 13px;
-    background: #f8fafc;
-    outline: none;
+  width: 100%;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 13px;
+  background: #f8fafc;
+  outline: none;
 }
 
 .CampoTextarea {
-    height: 70px;
-    resize: none;
-    padding-top: 10px;
+  height: 70px;
+  resize: none;
+  padding-top: 10px;
 }
 
 select.CampoFormulario {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .CentralizarDiv2 {
-    display: flex;
-    justify-content: center;
-    margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
 }
 
 .BotaoCriar {
-    background: linear-gradient(135deg,#ffffff,#eef2ff);
-    border: none;
-    color: #24324f;
-    font-weight: 700;
-    font-size: 14px;
-    padding: 12px 26px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: .2s ease;
-    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+  background: linear-gradient(135deg, #ffffff, #eef2ff);
+  border: none;
+  color: #24324f;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 26px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .2s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
 }
 
 .BotaoCriar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(0,0,0,.2);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, .2);
+}
+
+/* ── Alertas inline ── */
+.alerta {
+  padding: 12px 18px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: .9rem;
+  font-family: 'Sora', sans-serif;
+}
+
+.alerta-sucesso {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.alerta-erro {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+/* ── Modal de adicionar/editar requisito ── */
+.CheckboxModal {
+  display: none;
+}
+
+.FundoModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.CheckboxModal:checked~.FundoModal {
+  display: flex;
+}
+
+.SombreaModal {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .45);
+  cursor: pointer;
+}
+
+.ContainerModal {
+  position: relative;
+  z-index: 1;
+  background: #1e1e2e;
+  border-radius: 16px;
+  padding: 36px 40px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+}
+
+.BotaoVoltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #a0aec0;
+  font-size: .85rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+
+.BotaoVoltar:hover {
+  color: #fff;
+}
+
+.ImagemLogoModal {
+  height: 32px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.TituloModal {
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  font-family: 'Sora', sans-serif;
+}
+
+.GrupoFormulario {
+  margin-bottom: 16px;
+}
+
+.LabelFormulario {
+  display: block;
+  color: #a0aec0;
+  font-size: .82rem;
+  margin-bottom: 6px;
+  font-family: 'Sora', sans-serif;
+}
+
+.CampoFormulario {
+  width: 100%;
+  padding: 10px 14px;
+  background: #2d2d44;
+  border: 1px solid #3d3d5c;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-size: .9rem;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.CampoFormulario:focus {
+  border-color: #7c6af7;
+}
+
+.CampoTextarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.CentralizarDiv2 {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.BotaoCriar {
+  background: #7c6af7;
+  color: #fff;
+  border: none;
+  padding: 11px 32px;
+  border-radius: 8px;
+  font-family: 'Sora', sans-serif;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.BotaoCriar:hover {
+  background: #6254d4;
+}
+
+/* ── Seção de imagens ── */
+.SecaoImagens {
+  margin-top: 40px;
+}
+
+.TituloSecaoImagens {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.ZonaUpload {
+  border: 2px dashed #4a5568;
+  border-radius: 12px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  background: #1a1a2e;
+  margin-bottom: 24px;
+}
+
+.ZonaUpload:hover,
+.ZonaUpload.arrastando {
+  border-color: #7c6af7;
+  background: #22223a;
+}
+
+.ZonaUpload i {
+  font-size: 2.2rem;
+  color: #7c6af7;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.ZonaUpload p {
+  color: #a0aec0;
+  font-family: 'Sora', sans-serif;
+  font-size: .9rem;
+  margin: 0;
+}
+
+.ZonaUpload small {
+  color: #718096;
+  font-size: .78rem;
+}
+
+.InputArquivoOculto {
+  display: none;
+}
+
+.GradeImagens {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.CardImagem {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1e1e2e;
+  border: 1px solid #2d2d44;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .3);
+}
+
+.CardImagem img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.BotaoExcluirImagem {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(220, 38, 38, .85);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 9px;
+  cursor: pointer;
+  font-size: .78rem;
+  font-family: 'Sora', sans-serif;
+  transition: background .2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.BotaoExcluirImagem:hover {
+  background: #b91c1c;
+}
+
+.NomeImagem {
+  padding: 8px 12px;
+  font-size: .78rem;
+  color: #a0aec0;
+  font-family: 'Sora', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Preview antes de enviar ── */
+.GradePreview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.ItemPreview {
+  position: relative;
+}
+
+.ItemPreview img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #7c6af7;
+}
+
+.RemoverPreview {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: .75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.WrapperModal {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.WrapperModal .CheckboxModal { display: none; }
+
+.WrapperModal .FundoModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.WrapperModal .CheckboxModal:checked ~ .FundoModal {
+    display: flex;
+    pointer-events: all;
+}
+
+.BotaoEnviarImagens {
+  margin-top: 14px;
+  background: #7c6af7;
+  color: #fff;
+  border: none;
+  padding: 9px 24px;
+  border-radius: 8px;
+  font-family: 'Sora', sans-serif;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+  display: none;
+}
+
+.BotaoEnviarImagens:hover {
+  background: #6254d4;
+}
+
+.BotaoEnviarImagens.visivel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
