@@ -1,3 +1,9 @@
+<?php
+require_once '../config/verificar_sessao.php';
+$nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
+$tipoUsuario = $_SESSION['usuario_tipo'] ?? 'Visitante';
+$emailUsuario = $_SESSION['usuario_email'] ?? 'Email';
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -18,11 +24,11 @@
 
         <section class="CardPerfil">
             <div class="CabecalhoPerfil">
-                <div class="AvatarPerfilGrande">VK</div>
+                <div class="AvatarPerfilGrande"><?= strtoupper(substr($nomeUsuario, 0, 1)) ?></div>
                 <div class="InfoPerfilGrande">
-                    <h2>Victor Koba</h2>
-                    <p>Administrador</p>
-                    <span><i class="fa-solid fa-envelope"></i> victor.koba@requick.com</span>
+                    <h2><?= htmlspecialchars($nomeUsuario) ?></h2>
+                    <p><?= htmlspecialchars($tipoUsuario) ?></p>
+                    <span><i class="fa-solid fa-envelope"></i><?= htmlspecialchars($emailUsuario) ?></span>
                 </div>
                 <a href="configuracoes.php" class="BotaoCadastrar">Editar perfil</a>
             </div>
@@ -54,9 +60,9 @@
             <div class="BlocoDadosPerfil">
                 <h3>Dados da conta</h3>
                 <ul>
-                    <li><span>Nome completo</span><strong>Victor Koba</strong></li>
-                    <li><span>E-mail</span><strong>victor.koba@requick.com</strong></li>
-                    <li><span>Cargo</span><strong>Administrador</strong></li>
+                    <li><span>Nome completo</span><strong><?= htmlspecialchars($nomeUsuario) ?></strong></li>
+                    <li><span>E-mail</span><strong><?= htmlspecialchars($emailUsuario) ?></strong></li>
+                    <li><span>Cargo</span><strong><?= htmlspecialchars($tipoUsuario) ?></strong></li>
                     <li><span>Equipe</span><strong>Núcleo Requick</strong></li>
                     <li><span>Conta criada em</span><strong>10/04/2026</strong></li>
                 </ul>

@@ -1,3 +1,6 @@
+<?php
+require_once '../config/verificar_sessao.php';
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

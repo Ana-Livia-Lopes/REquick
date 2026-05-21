@@ -1,11 +1,14 @@
-<?php if (!isset($paginaAtiva)) { $paginaAtiva = ''; } ?>
+<?php
+$nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
+$tipoUsuario = $_SESSION['usuario_tipo'] ?? 'Visitante';
+?>
 <aside class="BarraLateral">
     <div class="LogoTopo">
         <img src="../img/logo-requick.png" alt="Requick" class="ImagemLogo" />
     </div>
 
     <nav class="MenuNav">
-        <a href="../index.php" class="ItemMenu ">
+        <a href="dashboard.php" class="ItemMenu <?= $paginaAtiva === 'dashboard' ? 'ItemMenuAtivo' : '' ?>">
             <i class="fa-solid fa-layer-group"></i>
             Dashboard
         </a>
@@ -20,15 +23,24 @@
     </nav>
 
     <!-- Div de Perfil transformada em link -->
+
     <a href="perfil.php" class="LinkPerfil">
         <div class="PerfilUsuario <?= $paginaAtiva === 'perfil' ? 'PerfilAtivo' : '' ?>">
-            <div class="AvatarPerfil">VK</div>
-            <div class="InfoPerfil">
-                <p class="NomeUsuario">Victor Koba</p>
-                <p class="CargoUsuario">(administrador)</p>
+
+            <div class="AvatarPerfil">
+                <?= strtoupper(substr($nomeUsuario, 0, 1)) ?>
             </div>
+
+            <div class="InfoPerfil">
+                <p class="NomeUsuario">
+                    <?= htmlspecialchars($nomeUsuario) ?>
+                </p>
+
+                <p class="CargoUsuario">
+                    (<?= htmlspecialchars($tipoUsuario) ?>)
+                </p>
+            </div>
+
         </div>
     </a>
 </aside>
-
-
