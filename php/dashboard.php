@@ -1,5 +1,38 @@
 <?php
 require_once '../config/verificar_sessao.php';
+require_once '../components/modal.php';
+require_once 'projeto_acoes.php'; 
+
+$erro = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $nomeProjeto = trim($_POST['InputNomeProjeto']);
+
+    // VALIDAÇÃO
+    if ($nomeProjeto === '') {
+
+        $erro = 'O nome do projeto é obrigatório.';
+
+    } else {
+
+        $projeto = new \php\Projeto();
+
+        $projeto->setNome($nomeProjeto);
+        $projeto->setDescricao($_POST['InputDescricao']);
+        $projeto->setIdEmpresa($_POST['selectEmpresa']);
+
+        $projeto->setDataCriacao(date('Y-m-d'));
+
+        $projetoDao = new \php\ProjetoDao();
+        $projetoDao->create($projeto);
+
+        $_SESSION['modal_sucesso'] = true;
+
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -9,16 +42,17 @@ require_once '../config/verificar_sessao.php';
     <title>Requick – Dashboard</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/projetos.css" />
+    <link rel="stylesheet" href="../css/modal.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <?php
-        require_once 'projeto_acoes.php'; 
         $projetos = new \php\Projeto();
         $projetoDao = new \php\ProjetoDao($projetos);
-
+        $empresaDao = new \php\EmpresaDao();
+        date_default_timezone_set('America/Sao_Paulo');
     ?>
     <?php $paginaAtiva = 'dashboard'; include 'navbar_lateral.php'; ?>
 
@@ -172,32 +206,43 @@ require_once '../config/verificar_sessao.php';
         <img src="../img/logo-requick.png" alt="Requick" class="ImagemLogoModal" />
       </div>
       <h2 class="TituloModal">Novo Projeto</h2>
-      <form action="">
+      <form action="" method="post">
         
           <div class="GrupoFormulario">
             <label class="LabelFormulario" for="InputNomeProjeto">Nome do projeto</label>
-            <input type="text" name="InputNomeProjeto" id="InputNomeProjeto" class="CampoFormulario" placeholder="Digite o nome do projeto" />
+            <input type="text" name="InputNomeProjeto" id="InputNomeProjeto" class="CampoFormulario" placeholder="Digite o nome do projeto" required/>
+            <?php if($erro != ''): ?>
+
+                <div class="MensagemErro" style="color: red;">
+                    <?= htmlspecialchars($erro) ?>
+                </div>
+
+            <?php endif; ?>
           </div>
           <div class="GrupoFormulario">
             <label class="LabelFormulario" for="InputDescricao">Descrição</label>
             <textarea id="InputDescricao" name="InputDescricao" class="CampoFormulario CampoTextarea" placeholder="Digite a descrição do projeto"></textarea>
           </div>
-          <div class="GrupoFormulario">
-            <label class="LabelFormulario" for="InputPrevisao">Previsão de entrega</label>
-            <input type="date" name="InputPrevisao" id="InputPrevisao" class="CampoFormulario" />
-          </div>
-          <div class="GrupoFormulario">
-            <label class="LabelFormulario" for="selectEmpresa">Empresa</label>
-            <select type="date" name="selectEmpresa" id="selectEmpresa" class="CampoFormulario" >
-                <?php foreach ($projetoDao->read() as $projeto): ?>
+            <div class="GrupoFormulario">
+                <label class="LabelFormulario" for="selectEmpresa">
+                    Empresa
+                </label>
 
-                    <option value="<?= htmlspecialchars($projeto['id']) ?>">
-                        <?= htmlspecialchars($projeto['nome_projeto']) ?>
-                    </option>
+                <select 
+                    name="selectEmpresa" 
+                    id="selectEmpresa" 
+                    class="CampoFormulario">
 
-                <?php endforeach; ?>
-            </select>
-          </div>
+                    <?php foreach ($empresaDao->read() as $empresa): ?>
+
+                        <option value="<?= htmlspecialchars($empresa['id']) ?>">
+                            <?= htmlspecialchars($empresa['nome_empresa']) ?>
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
+            </div>
           <div class="CentralizarDiv2">
            <button type="submit" class="BotaoCriar">Criar Projeto</button> 
           </div>
@@ -205,5 +250,21 @@ require_once '../config/verificar_sessao.php';
       </form>
     </div>
   </div>
+  <script src="../assets/modal.js"></script>
+  <!-- modal -->
+    <?php
+        renderModal('modalSucesso','Sucesso','<p>Projeto criado!</p>');
+    ?>
+    <?php if(isset($_SESSION['modal_sucesso'])): ?>
+
+    <script>
+
+        abrirModal('modalSucesso');
+
+    </script>
+
+    <?php unset($_SESSION['modal_sucesso']); ?>
+
+    <?php endif; ?>
 </body>
 </html>

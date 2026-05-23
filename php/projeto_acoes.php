@@ -18,8 +18,20 @@ class Conexao{
 }     
 
 class Projeto{
-    private $id, $nome, $descricao;
+    private $id, $nome, $descricao, $idEmpresa, $dataCriacao;
+    public function setDataCriacao($dataCriacao){
+        $this->dataCriacao = $dataCriacao;
+    }
 
+    public function getDataCriacao(){
+        return $this->dataCriacao;
+    }
+    public function setIdEmpresa($idEmpresa){
+        $this->idEmpresa = $idEmpresa;
+    }
+    public function getIdEmpresa(){
+        return $this->idEmpresa;
+    }
     public function getId(){
         return $this->id;
     }
@@ -37,13 +49,39 @@ class Projeto{
     }
 }
 
+class EmpresaDao {
+
+    public function read(){
+
+        $sql = "SELECT * FROM tb_empresa";
+
+        $stmt = Conexao::getConn()->prepare($sql);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+
 class ProjetoDao{
     public function create(Projeto $p){
 
-        $sql = 'INSERT INTO tb_projetos (nome_projeto, descricao) VALUES (?,?)';
+        $sql = "INSERT INTO tb_projetos
+        (nome_projeto, data_criacao, descricao, id_empresa, status_projeto)
+        VALUES (?, ?, ?, ?, ?)";
+
         $stmt = Conexao::getConn()->prepare($sql);
-        $stmt->bindValue(1, $p->getNome());//1 se refere ao nome (a primeir interrogação)
-        $stmt->bindValue(2, $p->getDescricao());
+
+        $descricao = trim($p->getDescricao()) === ''
+            ? null
+            : $p->getDescricao();
+
+        $stmt->bindValue(1, $p->getNome());
+        $stmt->bindValue(2, $p->getDataCriacao());
+        $stmt->bindValue(3, $descricao, $descricao === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(4, $p->getIdEmpresa());
+        $stmt->bindValue(5, 1);
+
         $stmt->execute();
     }
     public function read(){
