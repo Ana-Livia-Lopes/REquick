@@ -1,6 +1,6 @@
 <?php
 require_once 'auth.php';
-// require_once '../config/verificar_sessao.php';
+require_once '../config/conexao.php';
 require_once '../components/modal.php';
 require_once 'projeto_acoes.php'; 
 
@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+    
     <?php
         $projetos = new \php\Projeto();
         $projetoDao = new \php\ProjetoDao($projetos);
@@ -58,9 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php $paginaAtiva = 'dashboard'; include 'navbar_lateral.php'; ?>
 
     <div class="ConteudoPrincipal">
-
+        
         <header class="CabecalhoPagina">
-            <h1 class="TituloBoasVindas">Olá, <?= $paginaAtiva === 'perfil' ? 'PerfilAtivo' : '' ?>! Bem-vindo(a) ao Dashboard.</h1>
+            <h1 class="TituloBoasVindas">Olá, <?= isset($_SESSION['usuario_nome']) ? htmlspecialchars($_SESSION['usuario_nome']) : 'Visitante' ?>! Bem-vindo(a) ao Dashboard.</h1>
         </header>
 
         <div class="ContainerBusca">
@@ -163,36 +164,82 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="FeedAtividades">
             <h2 class="TituloFeed">Feed de Atividades</h2>
             <ul class="ListaAtividades">
-                <li class="ItemAtividade">
-                    <div class="AvatarAtividade">VK</div>
-                    <div class="ConteudoAtividade">
-                        <div class="LinhaAtividade">
-                            <p class="NomeAtividade">Victor Koba</p>
-                            <p class="TempoAtividade">2 min atrás</p>
-                        </div>
-                        <p class="TextoAtividade">editou Requisito RF01 no E-commerce Alpha</p>
-                    </div>
-                </li>
-                <li class="ItemAtividade">
-                    <div class="AvatarAtividade">JP</div>
-                    <div class="ConteudoAtividade">
-                        <div class="LinhaAtividade">
-                            <p class="NomeAtividade">João Pedro</p>
-                            <p class="TempoAtividade">3 horas atrás</p>
-                        </div>
-                        <p class="TextoAtividade">editou Requisito RF02 no Projeto Beta</p>
-                    </div>
-                </li>
-                <li class="ItemAtividade">
-                    <div class="AvatarAtividade">JA</div>
-                    <div class="ConteudoAtividade">
-                        <div class="LinhaAtividade">
-                            <p class="NomeAtividade">Jacquys</p>
-                            <p class="TempoAtividade">5 horas atrás</p>
-                        </div>
-                        <p class="TextoAtividade">editou Requisito RNF15 no Projeto Abençoado</p>
-                    </div>
-                </li>
+                <?php
+                // 1. Função para calcular o tempo decorrido
+                if (!function_exists('tempoAtras')) {
+                    function tempoAtras($data) {
+                        $agora = new DateTime();
+                        $dataBanco = new DateTime($data);
+                        $diferenca = $agora->diff($dataBanco);
+
+                        if ($diferenca->y > 0) return $diferenca->y . ' ano(s) atrás';
+                        if ($diferenca->m > 0) return $diferenca->m . ' mês(es) atrás';
+                        if ($diferenca->d > 0) return $diferenca->d . ' dia(s) atrás';
+                        if ($diferenca->h > 0) return $diferenca->h . ' hora(s) atrás';
+                        if ($diferenca->i > 0) return $diferenca->i . ' min atrás';
+                        return 'agora mesmo';
+                    }
+                }
+
+                // 2. Variável da empresa salva na sessão
+                $id_empresa = $_SESSION['usuario_empresa'];
+                
+                // 3. Query SQL
+                $sqlFeed = "SELECT 
+                        h.modificacao, 
+                        h.data, 
+                        u.nome AS autor_nome, 
+                        r.titulo_requisito, 
+                        p.nome_projeto
+                    FROM tb_historico h
+                    INNER JOIN tb_usuarios u ON h.autor = u.id
+                    INNER JOIN tb_requisitos r ON h.id_requisito = r.id
+                    INNER JOIN tb_projetos p ON r.id_projeto = p.id
+                    WHERE p.id_empresa = :id_empresa
+                    ORDER BY h.data DESC
+                    LIMIT 10"; 
+
+                try {
+                    // PRESTA ATENÇÃO AQUI: Agora estamos usando o seu $pdo
+                    $stmtFeed = $pdo->prepare($sqlFeed);
+                    $stmtFeed->execute(['id_empresa' => $id_empresa]);
+                    $atividades = $stmtFeed->fetchAll(PDO::FETCH_ASSOC);
+
+                    if (count($atividades) > 0) {
+                        foreach ($atividades as $atividade): 
+                            
+                            // Lógica do Avatar
+                            $partesNome = explode(' ', trim($atividade['autor_nome']));
+                            if (count($partesNome) >= 2) {
+                                $iniciais = strtoupper(substr($partesNome[0], 0, 1) . substr(end($partesNome), 0, 1));
+                            } else {
+                                $iniciais = strtoupper(substr($partesNome[0], 0, 2));
+                            }
+                ?>
+                            <li class="ItemAtividade">
+                                <div class="AvatarAtividade"><?= htmlspecialchars($iniciais) ?></div>
+                                <div class="ConteudoAtividade">
+                                    <div class="LinhaAtividade">
+                                        <p class="NomeAtividade"><?= htmlspecialchars($atividade['autor_nome']) ?></p>
+                                        <p class="TempoAtividade"><?= tempoAtras($atividade['data']) ?></p>
+                                    </div>
+                                    <p class="TextoAtividade">
+                                        <?= htmlspecialchars($atividade['modificacao']) ?> em 
+                                        <strong><?= htmlspecialchars($atividade['titulo_requisito']) ?></strong> 
+                                        no projeto <em><?= htmlspecialchars($atividade['nome_projeto']) ?></em>
+                                    </p>
+                                </div>
+                            </li>
+                <?php 
+                        endforeach; 
+                    } else {
+                        // Mensagem caso a empresa ainda não tenha histórico
+                        echo "<p style='color: #666; font-size: 0.9rem;'>Nenhuma atividade recente encontrada nos projetos da sua empresa.</p>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<p style='color: red;'>Erro ao carregar o feed de atividades: " . htmlspecialchars($e->getMessage()) . "</p>";
+                }
+                ?>
             </ul>
         </div>
     </div>
