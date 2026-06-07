@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 16/05/2026 às 18:23
--- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.0.30
+-- Generation Time: Jun 07, 2026 at 10:34 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `bd_requick`
+-- Database: `bd_requick`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_empresa`
+-- Table structure for table `tb_empresa`
 --
 
 CREATE TABLE `tb_empresa` (
@@ -34,7 +34,7 @@ CREATE TABLE `tb_empresa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Despejando dados para a tabela `tb_empresa`
+-- Dumping data for table `tb_empresa`
 --
 
 INSERT INTO `tb_empresa` (`id`, `nome_empresa`, `cnpj`) VALUES
@@ -44,7 +44,7 @@ INSERT INTO `tb_empresa` (`id`, `nome_empresa`, `cnpj`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_historico`
+-- Table structure for table `tb_historico`
 --
 
 CREATE TABLE `tb_historico` (
@@ -56,17 +56,30 @@ CREATE TABLE `tb_historico` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Despejando dados para a tabela `tb_historico`
+-- Dumping data for table `tb_historico`
 --
 
 INSERT INTO `tb_historico` (`id`, `data`, `modificacao`, `autor`, `id_requisito`) VALUES
-(1, '2026-05-01 15:43:35', 'Criação inicial do requisito de biometria', 1, 1),
-(2, '2026-05-01 15:43:35', 'Atualização do critério de performance', 2, 2);
+(1, '2026-05-01 15:43:35', 'Criação inicial do requisito de biometria', 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_projetos`
+-- Table structure for table `tb_imagens_projeto`
+--
+
+CREATE TABLE `tb_imagens_projeto` (
+  `id` int(11) NOT NULL,
+  `id_projeto` int(11) NOT NULL,
+  `nome_arquivo` varchar(255) NOT NULL,
+  `caminho` varchar(500) NOT NULL,
+  `data_upload` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_projetos`
 --
 
 CREATE TABLE `tb_projetos` (
@@ -80,7 +93,7 @@ CREATE TABLE `tb_projetos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Despejando dados para a tabela `tb_projetos`
+-- Dumping data for table `tb_projetos`
 --
 
 INSERT INTO `tb_projetos` (`id`, `nome_projeto`, `data_criacao`, `id_empresa`, `descricao`, `status_projeto`, `escopo_inicial`) VALUES
@@ -91,30 +104,36 @@ INSERT INTO `tb_projetos` (`id`, `nome_projeto`, `data_criacao`, `id_empresa`, `
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_requisitos`
+-- Table structure for table `tb_requisitos`
 --
 
 CREATE TABLE `tb_requisitos` (
   `id` int(11) NOT NULL,
-  `nome_requisito` varchar(255) NOT NULL,
+  `titulo_requisito` varchar(255) NOT NULL,
+  `descricao_requisito` text DEFAULT NULL,
   `tipo` enum('Funcional','Nao Funcional') NOT NULL,
+  `prioridade` varchar(20) DEFAULT NULL,
+  `responsavel` varchar(100) DEFAULT NULL,
+  `autor` varchar(100) DEFAULT NULL,
+  `data_modificacao` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `id_projeto` int(11) DEFAULT NULL,
   `status_req` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Despejando dados para a tabela `tb_requisitos`
+-- Dumping data for table `tb_requisitos`
 --
 
-INSERT INTO `tb_requisitos` (`id`, `nome_requisito`, `tipo`, `id_projeto`, `status_req`) VALUES
-(1, 'Login via Biometria', 'Funcional', 1, 0),
-(2, 'Tempo de resposta < 2s', 'Nao Funcional', 1, 0),
-(3, 'Exportação de Relatórios', 'Funcional', 3, 0);
+INSERT INTO `tb_requisitos` (`id`, `titulo_requisito`, `descricao_requisito`, `tipo`, `prioridade`, `responsavel`, `autor`, `data_modificacao`, `id_projeto`, `status_req`) VALUES
+(1, 'Login via Biometria', NULL, 'Funcional', NULL, NULL, NULL, '2026-06-07 13:03:34', 1, 0),
+(2, 'Tempo de resposta < 2s', NULL, 'Nao Funcional', NULL, NULL, NULL, '2026-06-07 13:03:34', 1, 0),
+(3, 'Exportação de Relatórios', NULL, 'Funcional', NULL, NULL, NULL, '2026-06-07 13:03:34', 3, 0),
+(4, 'teste', '', 'Funcional', 'Alta', 'teste', 'teste', '2026-06-07 13:39:18', 2, 0);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_usuarios`
+-- Table structure for table `tb_usuarios`
 --
 
 CREATE TABLE `tb_usuarios` (
@@ -124,31 +143,32 @@ CREATE TABLE `tb_usuarios` (
   `tipo_usuario` varchar(50) DEFAULT NULL,
   `especializacao` varchar(100) DEFAULT NULL,
   `senha` varchar(255) NOT NULL,
-  `id_empresa` int(11) DEFAULT NULL
+  `id_empresa` int(11) DEFAULT NULL,
+  `status` enum('ativo','inativo') NOT NULL DEFAULT 'ativo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `tb_usuarios`
+-- Dumping data for table `tb_usuarios`
 --
 
-INSERT INTO `tb_usuarios` (`id`, `nome`, `email`, `tipo_usuario`, `especializacao`, `senha`, `id_empresa`) VALUES
-(1, 'admin', 'admin@tech.com', 'Administrador', 'Administracao', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 1),
-(2, 'dev', 'dev@tech.com', 'Desenvolvedor', 'Desenvolvedor', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 1),
-(3, 'Carlos Prado', 'carlos@inova.com', 'Funcionario', 'Suporte Técnico', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 2);
+INSERT INTO `tb_usuarios` (`id`, `nome`, `email`, `tipo_usuario`, `especializacao`, `senha`, `id_empresa`, `status`) VALUES
+(1, 'admin', 'admin@tech.com', 'Administrador', 'Administracao', '$2y$10$VQEiJ/e5eZu5TTGaL/p33uzkHmW/2NpGtkwAY74mVBlNy4QE6IBbG', 1, 'ativo'),
+(3, 'Carlos Prado', 'carlos@inova.com', 'Funcionario', 'Suporte Técnico', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 2, 'inativo'),
+(4, 'Aldair', 'aldair@email.com', 'Cliente', 'Desenvolvedor', '$2y$10$.JdYtbixlLOeNIyQ9jR1s.i831rRFZQw6s5GECiGmj0AmVXvIrnRG', 1, 'ativo');
 
 --
--- Índices para tabelas despejadas
+-- Indexes for dumped tables
 --
 
 --
--- Índices de tabela `tb_empresa`
+-- Indexes for table `tb_empresa`
 --
 ALTER TABLE `tb_empresa`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `cnpj` (`cnpj`);
 
 --
--- Índices de tabela `tb_historico`
+-- Indexes for table `tb_historico`
 --
 ALTER TABLE `tb_historico`
   ADD PRIMARY KEY (`id`),
@@ -156,21 +176,28 @@ ALTER TABLE `tb_historico`
   ADD KEY `fk_historico_requisito` (`id_requisito`);
 
 --
--- Índices de tabela `tb_projetos`
+-- Indexes for table `tb_imagens_projeto`
+--
+ALTER TABLE `tb_imagens_projeto`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_projeto` (`id_projeto`);
+
+--
+-- Indexes for table `tb_projetos`
 --
 ALTER TABLE `tb_projetos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_projeto_empresa` (`id_empresa`);
 
 --
--- Índices de tabela `tb_requisitos`
+-- Indexes for table `tb_requisitos`
 --
 ALTER TABLE `tb_requisitos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_requisito_projeto` (`id_projeto`);
 
 --
--- Índices de tabela `tb_usuarios`
+-- Indexes for table `tb_usuarios`
 --
 ALTER TABLE `tb_usuarios`
   ADD PRIMARY KEY (`id`),
@@ -178,64 +205,76 @@ ALTER TABLE `tb_usuarios`
   ADD KEY `fk_usuario_empresa` (`id_empresa`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de tabela `tb_empresa`
+-- AUTO_INCREMENT for table `tb_empresa`
 --
 ALTER TABLE `tb_empresa`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de tabela `tb_historico`
+-- AUTO_INCREMENT for table `tb_historico`
 --
 ALTER TABLE `tb_historico`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de tabela `tb_projetos`
+-- AUTO_INCREMENT for table `tb_imagens_projeto`
+--
+ALTER TABLE `tb_imagens_projeto`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tb_projetos`
 --
 ALTER TABLE `tb_projetos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de tabela `tb_requisitos`
+-- AUTO_INCREMENT for table `tb_requisitos`
 --
 ALTER TABLE `tb_requisitos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de tabela `tb_usuarios`
+-- AUTO_INCREMENT for table `tb_usuarios`
 --
 ALTER TABLE `tb_usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Restrições para tabelas despejadas
+-- Constraints for dumped tables
 --
 
 --
--- Restrições para tabelas `tb_historico`
+-- Constraints for table `tb_historico`
 --
 ALTER TABLE `tb_historico`
   ADD CONSTRAINT `fk_historico_autor` FOREIGN KEY (`autor`) REFERENCES `tb_usuarios` (`id`),
   ADD CONSTRAINT `fk_historico_requisito` FOREIGN KEY (`id_requisito`) REFERENCES `tb_requisitos` (`id`);
 
 --
--- Restrições para tabelas `tb_projetos`
+-- Constraints for table `tb_imagens_projeto`
+--
+ALTER TABLE `tb_imagens_projeto`
+  ADD CONSTRAINT `tb_imagens_projeto_ibfk_1` FOREIGN KEY (`id_projeto`) REFERENCES `tb_projetos` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tb_projetos`
 --
 ALTER TABLE `tb_projetos`
   ADD CONSTRAINT `fk_projeto_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `tb_empresa` (`id`);
 
 --
--- Restrições para tabelas `tb_requisitos`
+-- Constraints for table `tb_requisitos`
 --
 ALTER TABLE `tb_requisitos`
   ADD CONSTRAINT `fk_requisito_projeto` FOREIGN KEY (`id_projeto`) REFERENCES `tb_projetos` (`id`);
 
 --
--- Restrições para tabelas `tb_usuarios`
+-- Constraints for table `tb_usuarios`
 --
 ALTER TABLE `tb_usuarios`
   ADD CONSTRAINT `fk_usuario_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `tb_empresa` (`id`);
