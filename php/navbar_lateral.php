@@ -16,18 +16,23 @@ $tipoUsuario = $_SESSION['usuario_tipo'] ?? 'Visitante';
             <i class="fa-solid fa-folder-open"></i>
             Projetos
         </a>
-        <a href="configuracoes.php" class="ItemMenu <?= $paginaAtiva === 'configuracoes' ? 'ItemMenuAtivo' : '' ?>">
-            <i class="fa-solid fa-gear"></i>
-            Configurações
-        </a>
+
+        <?php if ($tipoUsuario === 'Administrador'): ?>
+            <a href="cadastro.php" class="ItemMenu <?= $paginaAtiva === 'cadastro' ? 'ItemMenuAtivo' : '' ?>">
+                <i class="fa-solid fa-user-plus"></i>
+                Cadastro
+            </a>
+            <a href="configuracoes.php" class="ItemMenu <?= $paginaAtiva === 'configuracoes' ? 'ItemMenuAtivo' : '' ?>">
+                <i class="fa-solid fa-gear"></i>
+                Configurações
+            </a>
+        <?php endif; ?>
 
         <a href="logout.php" class="ItemMenu">
             <i class="fas fa-sign-out-alt"></i>
             Sair
         </a>
     </nav>
-
-    <!-- Div de Perfil transformada em link -->
 
     <a href="perfil.php" class="LinkPerfil">
         <div class="PerfilUsuario <?= $paginaAtiva === 'perfil' ? 'PerfilAtivo' : '' ?>">

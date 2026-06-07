@@ -1,6 +1,6 @@
 <?php
-require_once 'auth.php'
-require_once '../config/verificar_sessao.php';
+require_once 'auth.php';
+require_once '../config/conexao.php';
 $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
 $tipoUsuario = $_SESSION['usuario_tipo'] ?? 'Visitante';
 $emailUsuario = $_SESSION['usuario_email'] ?? 'Email';
