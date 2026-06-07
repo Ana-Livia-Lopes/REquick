@@ -1,32 +1,46 @@
-body{
+body {
+    min-height: 100vh;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #F5F8F9 0%, #EAF2F5 100%);
 }
-a{
+
+* {
+    box-sizing: border-box;
+}
+
+a {
     color: white;
 }
-.CardLogin{
-    width: 26%;
-    height: 65%;
+
+.CardLogin {
+    width: min(420px, 100%);
     background-color: #2E3A52;
     margin: auto;
-    border-radius: 40px;
-    box-shadow: 7px 7px 10px gray;
+    border-radius: 32px;
+    box-shadow: 7px 7px 14px rgba(0, 0, 0, 0.18);
+    padding: 24px 18px 28px;
 }
 .ImagemLogoLogin{
     width: 70%;
+    max-width: 220px;
     margin: auto;
     display: block;
-    padding-top: 45px;
+    padding-top: 18px;
 }
 .CardLogin h2{
     color: white;
     font-family: 'Sora', sans-serif;
     text-align: center;
-    margin-top: 65px;
-    padding-bottom: 15px;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
 }
 .CardLogin form{
-    width: 80%;
+    width: 100%;
+    max-width: 340px;
     margin: 0 auto;
 }
 .CardLogin label{
@@ -57,14 +71,48 @@ a{
     color: #ffffff;
     border: none;
     border-radius: 8px;
-    padding: 9px 0;
-    width: 43%;
-    height: 5vh;
+    padding: 10px 0;
+    width: 100%;
     font-family: 'Sora', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    margin: 30px auto;
+    margin: 24px auto 0;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 14px;
+    }
+
+    .CardLogin {
+        border-radius: 24px;
+        padding: 18px 14px 22px;
+    }
+
+    .CardLogin form {
+        max-width: 100%;
+    }
+
+    .BotaoEntrar {
+        font-size: 0.98rem;
+        padding: 11px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .ImagemLogoLogin {
+        width: 82%;
+        padding-top: 8px;
+    }
+
+    .CardLogin h2 {
+        margin-top: 14px;
+    }
+
+    .CardLogin input {
+        height: 42px;
+    }
 }
 
 .BotaoEntrar:hover {
