@@ -20,6 +20,11 @@ $tipoUsuario = $_SESSION['usuario_tipo'] ?? 'Visitante';
             <i class="fa-solid fa-gear"></i>
             Configurações
         </a>
+
+        <a href="logout.php" class="ItemMenu">
+            <i class="fas fa-sign-out-alt"></i>
+            Sair
+        </a>
     </nav>
 
     <!-- Div de Perfil transformada em link -->

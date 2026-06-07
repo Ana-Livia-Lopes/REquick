@@ -1,4 +1,5 @@
 <?php
+require_once 'auth.php'
 require_once '../config/verificar_sessao.php';
 $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
 $tipoUsuario = $_SESSION['usuario_tipo'] ?? 'Visitante';

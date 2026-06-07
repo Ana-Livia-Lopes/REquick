@@ -1,45 +1,39 @@
 <?php
 namespace php;
 
-require_once __DIR__ . '/conexao.php';
+require_once __DIR__ . '/../config/conexao.php';
+
 class RequisitosDao
 {
-    private \mysqli $conn;
+    private \PDO $pdo;
 
-    public function __construct(\mysqli $conn)
+    public function __construct(\PDO $pdo)
     {
-        $this->conn = $conn;
+        $this->pdo = $pdo;
     }
 
     public function listarPorProjeto(int $idProjeto): array
     {
-        $sql  = "SELECT * FROM tb_requisitos WHERE id_projeto = ? ORDER BY id ASC";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $idProjeto);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        return $resultado->fetch_all(MYSQLI_ASSOC);
+        $stmt = $this->pdo->prepare("SELECT * FROM tb_requisitos WHERE id_projeto = ? ORDER BY id ASC");
+        $stmt->execute([$idProjeto]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function buscarPorId(int $id): ?array
     {
-        $sql  = "SELECT * FROM tb_requisitos WHERE id = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        return $resultado->fetch_assoc() ?: null;
+        $stmt = $this->pdo->prepare("SELECT * FROM tb_requisitos WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
     }
 
     public function tituloExiste(string $titulo, int $idProjeto, int $ignorarId = 0): bool
     {
-        $sql  = "SELECT id FROM tb_requisitos 
-                 WHERE titulo_requisito = ? AND id_projeto = ? AND id != ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('sii', $titulo, $idProjeto, $ignorarId);
-        $stmt->execute();
-        $stmt->store_result();
-        return $stmt->num_rows > 0;
+        $stmt = $this->pdo->prepare(
+            "SELECT id FROM tb_requisitos 
+             WHERE titulo_requisito = ? AND id_projeto = ? AND id != ?"
+        );
+        $stmt->execute([$titulo, $idProjeto, $ignorarId]);
+        return $stmt->rowCount() > 0;
     }
 
     public function criar(
@@ -51,17 +45,13 @@ class RequisitosDao
         string $responsavel,
         string $autor
     ): bool {
-        $sql = "INSERT INTO tb_requisitos 
-                    (id_projeto, titulo_requisito, descricao_requisito,
-                     tipo, prioridade, responsavel, autor, status_req)
-                VALUES (?, ?, ?, ?, ?, ?, ?, 0)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param(
-            'issssss',
-            $idProjeto, $titulo, $descricao,
-            $tipo, $prioridade, $responsavel, $autor
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO tb_requisitos 
+                (id_projeto, titulo_requisito, descricao_requisito,
+                 tipo, prioridade, responsavel, autor, status_req)
+             VALUES (?, ?, ?, ?, ?, ?, ?, 0)"
         );
-        return $stmt->execute();
+        return $stmt->execute([$idProjeto, $titulo, $descricao, $tipo, $prioridade, $responsavel, $autor]);
     }
 
     public function editar(
@@ -76,73 +66,63 @@ class RequisitosDao
     ): bool {
         $statusInt = ($status === '1') ? 1 : 0;
 
-        $sql = "UPDATE tb_requisitos SET
-                    titulo_requisito     = ?,
-                    descricao_requisito  = ?,
-                    tipo                 = ?,
-                    prioridade           = ?,
-                    responsavel          = ?,
-                    status_req           = ?,
-                    autor                = ?
-                WHERE id = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param(
-            'sssssisi',
-            $titulo, $descricao, $tipo,
-            $prioridade, $responsavel, $statusInt, $autor, $id
+        $stmt = $this->pdo->prepare(
+            "UPDATE tb_requisitos SET
+                titulo_requisito    = ?,
+                descricao_requisito = ?,
+                tipo                = ?,
+                prioridade          = ?,
+                responsavel         = ?,
+                status_req          = ?,
+                autor               = ?
+             WHERE id = ?"
         );
-        return $stmt->execute();
+        return $stmt->execute([$titulo, $descricao, $tipo, $prioridade, $responsavel, $statusInt, $autor, $id]);
     }
 
     public function excluir(int $id): bool
     {
-        $sql  = "DELETE FROM tb_requisitos WHERE id = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $id);
-        return $stmt->execute();
+        $stmt = $this->pdo->prepare("DELETE FROM tb_requisitos WHERE id = ?");
+        return $stmt->execute([$id]);
     }
 }
 
 class ImagensDao
 {
-    private \mysqli $conn;
+    private \PDO $pdo;
 
-    public function __construct(\mysqli $conn)
+    public function __construct(\PDO $pdo)
     {
-        $this->conn = $conn;
+        $this->pdo = $pdo;
     }
 
     public function listarPorProjeto(int $idProjeto): array
     {
-        $sql  = "SELECT * FROM tb_imagens_projeto WHERE id_projeto = ? ORDER BY data_upload ASC";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $idProjeto);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt = $this->pdo->prepare(
+            "SELECT * FROM tb_imagens_projeto WHERE id_projeto = ? ORDER BY data_upload ASC"
+        );
+        $stmt->execute([$idProjeto]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function salvar(int $idProjeto, string $nomeArquivo, string $caminho): bool
     {
-        $sql  = "INSERT INTO tb_imagens_projeto (id_projeto, nome_arquivo, caminho) VALUES (?, ?, ?)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('iss', $idProjeto, $nomeArquivo, $caminho);
-        return $stmt->execute();
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO tb_imagens_projeto (id_projeto, nome_arquivo, caminho) VALUES (?, ?, ?)"
+        );
+        return $stmt->execute([$idProjeto, $nomeArquivo, $caminho]);
     }
 
     public function buscarPorId(int $id): ?array
     {
-        $sql  = "SELECT * FROM tb_imagens_projeto WHERE id = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc() ?: null;
+        $stmt = $this->pdo->prepare("SELECT * FROM tb_imagens_projeto WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
     }
 
     public function excluir(int $id): bool
     {
-        $sql  = "DELETE FROM tb_imagens_projeto WHERE id = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $id);
-        return $stmt->execute();
+        $stmt = $this->pdo->prepare("DELETE FROM tb_imagens_projeto WHERE id = ?");
+        return $stmt->execute([$id]);
     }
 }

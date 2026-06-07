@@ -1,5 +1,6 @@
 <?php
-require_once '../config/verificar_sessao.php';
+require_once 'auth.php';
+// require_once '../config/verificar_sessao.php';
 require_once '../components/modal.php';
 require_once 'projeto_acoes.php'; 
 
@@ -59,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="ConteudoPrincipal">
 
         <header class="CabecalhoPagina">
-            <h1 class="TituloBoasVindas">Olá Victor, bem-vindo(a) ao Dashboard!</h1>
+            <h1 class="TituloBoasVindas">Olá, <?= $paginaAtiva === 'perfil' ? 'PerfilAtivo' : '' ?>! Bem-vindo(a) ao Dashboard.</h1>
         </header>
 
         <div class="ContainerBusca">

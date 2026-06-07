@@ -1,6 +1,6 @@
 <?php
-
-require_once __DIR__ . '/conexao.php';
+require_once 'auth.php';
+require_once __DIR__ . '/../config/conexao.php';
 require_once __DIR__ . '/requisito_acoes.php';
 
 $idProjeto = (int)($_GET['id'] ?? 0);
@@ -9,17 +9,16 @@ if ($idProjeto <= 0) {
     exit;
 }
 
-$stmtP  = $conn->prepare("SELECT * FROM tb_projetos WHERE id = ?");
-$stmtP->bind_param('i', $idProjeto);
-$stmtP->execute();
-$projeto = $stmtP->get_result()->fetch_assoc();
+$stmtP = $pdo->prepare("SELECT * FROM tb_projetos WHERE id = ?");
+$stmtP->execute([$idProjeto]);
+$projeto = $stmtP->fetch(PDO::FETCH_ASSOC);
 if (!$projeto) {
     header('Location: projetos.php');
     exit;
 }
 
-$reqDao = new \php\RequisitosDao($conn);
-$imgDao = new \php\ImagensDao($conn);
+$reqDao = new \php\RequisitosDao($pdo);
+$imgDao = new \php\ImagensDao($pdo);
 
 $requisitos = $reqDao->listarPorProjeto($idProjeto);
 $imagens    = $imgDao->listarPorProjeto($idProjeto);

@@ -1,3 +1,20 @@
+<?php
+// Sessão sem cookie persistente: expira ao fechar o navegador
+session_set_cookie_params([
+    'lifetime' => 0,        // 0 = cookie de sessão (some ao fechar o navegador)
+    'path'     => '/',
+    'secure'   => false,    // mude para true em produção com HTTPS
+    'httponly' => true,     // impede acesso via JavaScript
+    'samesite' => 'Strict',
+]);
+session_start();
+
+// Se já está logado, redireciona para o sistema
+if (!empty($_SESSION['usuario_id'])) {
+    header("Location: php/dashboard.php"); // ajuste para sua página principal
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -30,7 +47,6 @@
             </p>
         <?php endif; ?>
 
-
         <form action="php/login.php" method="POST">
             <label for="IdEmail">Email</label>
             <input type="email" id="IdEmail" name="email"
@@ -38,12 +54,10 @@
                 value="<?= htmlspecialchars($_GET['email'] ?? '') ?>"
                 required>
 
-
             <label for="IdSenha">Senha</label>
             <input type="password" id="IdSenha" name="senha"
                 placeholder="Digite a sua senha"
                 required>
-
 
             <a href=""><small>Esqueceu a senha?</small></a>
             <button type="submit" class="BotaoEntrar">Entrar</button>

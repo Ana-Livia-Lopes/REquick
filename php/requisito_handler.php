@@ -1,20 +1,16 @@
 <?php
 
-require_once __DIR__ . '/conexao.php';
+require_once __DIR__ . '/../config/conexao.php';
 require_once __DIR__ . '/requisito_acoes.php';
 
-$dao    = new \php\RequisitosDao($conn);
+$dao    = new \php\RequisitosDao($pdo);
 $acao   = $_POST['acao']       ?? '';
 $volta  = 'projeto.php?id=' . (int)($_POST['id_projeto'] ?? 0);
 
 if ($acao === 'adicionar') {
     $idProjeto  = (int)$_POST['id_projeto'];
-    $titulo     = trim($_POST['titulo']      ?? '');
-    $descricao  = trim($_POST['descricao']   ?? '');
-    $tipo       = $_POST['tipo']             ?? 'Funcional';
-    $prioridade = $_POST['prioridade']       ?? '';
-    $responsavel= trim($_POST['responsavel'] ?? '');
-    $autor      = trim($_POST['autor']       ?? 'Sistema');
+    $titulo     = trim($_POST['titulo'] ?? '');
+    $tipo       = $_POST['tipo']        ?? 'Funcional';
 
     if ($titulo === '') {
         header("Location: $volta&erro=titulo_vazio");
@@ -26,21 +22,21 @@ if ($acao === 'adicionar') {
         exit;
     }
 
-    $dao->criar($idProjeto, $titulo, $descricao, $tipo, $prioridade, $responsavel, $autor);
+    $dao->criar($idProjeto, $titulo, $tipo);
     header("Location: $volta&sucesso=requisito_adicionado");
     exit;
 }
 
 if ($acao === 'editar') {
-    $id         = (int)$_POST['id_requisito'];
-    $idProjeto  = (int)$_POST['id_projeto'];
-    $titulo     = trim($_POST['titulo']      ?? '');
-    $descricao  = trim($_POST['descricao']   ?? '');
-    $tipo       = $_POST['tipo']             ?? 'Funcional';
-    $prioridade = $_POST['prioridade']       ?? '';
-    $responsavel= trim($_POST['responsavel'] ?? '');
-    $status     = $_POST['status']           ?? '0';
-    $autor      = trim($_POST['autor']       ?? 'Sistema');
+    $id          = (int)$_POST['id_requisito'];
+    $idProjeto   = (int)$_POST['id_projeto'];
+    $titulo      = trim($_POST['titulo']       ?? '');
+    $descricao   = trim($_POST['descricao']    ?? '');
+    $tipo        = $_POST['tipo']              ?? 'Funcional';
+    $prioridade  = $_POST['prioridade']        ?? '';
+    $responsavel = trim($_POST['responsavel']  ?? '');
+    $status      = $_POST['status']            ?? '0';
+    $autor       = trim($_POST['autor']        ?? 'Sistema');
 
     if ($titulo === '') {
         header("Location: $volta&erro=titulo_vazio");

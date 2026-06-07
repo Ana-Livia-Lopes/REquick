@@ -1,5 +1,6 @@
 <?php
-require_once '../config/verificar_sessao.php';
+require_once 'auth.php';
+require_once '../config/conexao.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

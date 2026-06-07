@@ -1,5 +1,8 @@
 <?php
-require_once '../config/verificar_sessao.php';
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+require_once 'auth.php';
+// require_once '../config/conexao.php' REMOVIDO — a classe Conexao em projeto_acoes.php cuida disso
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -15,14 +18,10 @@ require_once '../config/verificar_sessao.php';
 <body class="LayoutPadrao">
 
     <?php
-      require_once 'projeto_acoes.php'; 
-      $projetos = new \php\Projeto();
-      $projetoDao = new \php\ProjetoDao($projetos);
-
-
+      require_once 'projeto_acoes.php';
+      $projetoDao = new \php\ProjetoDao();
     ?>
 
-  <?php include 'navbar_lateral.php'; ?>
   <?php $paginaAtiva = 'projetos'; include 'navbar_lateral.php'; ?>
 
   <div class="AreaRolavel AreaRolavelDashboard">
@@ -45,51 +44,37 @@ require_once '../config/verificar_sessao.php';
 
         <div class="GradeProjetos">
           <?php foreach ($projetoDao->read_projetos() as $projeto): ?>
-                    <div class="CardProjeto">
+            <div class="CardProjeto">
 
-                        <h3 class="NomeProjeto">
-                            <?= htmlspecialchars($projeto['nome_projeto']) ?>
-                        </h3>
+              <h3 class="NomeProjeto">
+                <?= htmlspecialchars($projeto['nome_projeto']) ?>
+              </h3>
 
-                        <p class="DescricaoProjeto">
-                            <?= !empty($projeto['descricao']) 
-                                ? htmlspecialchars($projeto['descricao']) 
-                                : 'Sem descrição disponível' ?>
-                        </p>
+              <p class="DescricaoProjeto">
+                <?= !empty($projeto['descricao'])
+                  ? htmlspecialchars($projeto['descricao'])
+                  : 'Sem descrição disponível' ?>
+              </p>
 
-                        <p class="AutorAlteracao">
-                            <?php if (!empty($projeto['autor'])): ?>
+              <p class="AutorAlteracao">
+                <?php if (!empty($projeto['autor'])): ?>
+                  Última alteração feita por
+                  <strong><?= htmlspecialchars($projeto['autor']) ?></strong>
+                  <br>
+                  <small><?= htmlspecialchars($projeto['modificacao']) ?></small>
+                  <br>
+                  <small><?= date('d/m/Y H:i', strtotime($projeto['data_modificacao'])) ?></small>
+                <?php else: ?>
+                  <em>Nenhuma alteração registrada</em>
+                <?php endif; ?>
+              </p>
 
-                                Última alteração feita por 
-                                <strong>
-                                    <?= htmlspecialchars($projeto['autor']) ?>
-                                </strong>
+              <a href="projeto.php?id=<?= $projeto['id'] ?>" class="BotaoAcessar">
+                Acessar projeto
+              </a>
 
-                                <br>
-
-                                <small>
-                                    <?= htmlspecialchars($projeto['modificacao']) ?>
-                                </small>
-
-                                <br>
-
-                                <small>
-                                    <?= date('d/m/Y H:i', strtotime($projeto['data_modificacao'])) ?>
-                                </small>
-
-                            <?php else: ?>
-
-                                <em>Nenhuma alteração registrada</em>
-
-                            <?php endif; ?>
-                        </p>
-
-                        <a href="php/projeto.php?id=<?= $projeto['id'] ?>" class="BotaoAcessar">
-                            Acessar projeto
-                        </a>
-
-                    </div>
-                <?php endforeach; ?>
+            </div>
+          <?php endforeach; ?>
         </div>
       </div>
     </main>
@@ -123,5 +108,6 @@ require_once '../config/verificar_sessao.php';
       </div>
     </div>
   </div>
+
 </body>
 </html>
