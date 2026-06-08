@@ -9,6 +9,7 @@ session_set_cookie_params([
 session_start();
 
 if (empty($_SESSION['usuario_id'])) {
-    header("Location: index.php"); // ajuste o caminho se necessário
+    $redirect = dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/index.php';
+    header("Location: $redirect");
     exit;
 }

@@ -28,6 +28,12 @@ if (ini_get("session.use_cookies")) {
 // Destrói a sessão no servidor
 session_destroy();
 
-// Redireciona para o login
-header("Location: ../index.php");
+// Evita cache de páginas protegidas após logout
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+
+// Redireciona para o login de forma robusta
+$redirect = dirname($_SERVER['SCRIPT_NAME']) . '/../index.php';
+header("Location: $redirect");
 exit;

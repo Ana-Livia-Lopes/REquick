@@ -58,8 +58,6 @@ if (!empty($_SESSION['usuario_id'])) {
             <input type="password" id="IdSenha" name="senha"
                 placeholder="Digite a sua senha"
                 required>
-
-            <a href=""><small>Esqueceu a senha?</small></a>
             <button type="submit" class="BotaoEntrar">Entrar</button>
         </form>
     </div>
