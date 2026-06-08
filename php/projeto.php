@@ -9,6 +9,15 @@ if ($idProjeto <= 0) {
     exit;
 }
 
+$stmtLog = $pdo->prepare("
+    INSERT INTO tb_log_acesso_projeto (id_usuario, id_projeto, data_acesso)
+    VALUES (:id_usuario, :id_projeto, NOW())
+");
+$stmtLog->execute([
+    'id_usuario' => $_SESSION['usuario_id'],
+    'id_projeto'  => $idProjeto
+]);
+
 $stmtP = $pdo->prepare("SELECT * FROM tb_projetos WHERE id = ?");
 $stmtP->execute([$idProjeto]);
 $projeto = $stmtP->fetch(PDO::FETCH_ASSOC);
@@ -17,11 +26,38 @@ if (!$projeto) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'add_comentario') {
+    // Valida se quem está enviando é realmente um Cliente
+    if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'Cliente') {
+        $titulo = trim($_POST['titulo_comentario']);
+        $descricao = trim($_POST['descricao_comentario']);
+        
+        if (!empty($titulo) && !empty($descricao)) {
+            $stmtCom = $pdo->prepare("INSERT INTO tb_comentarios (titulo_comentario, descricao_comentario, id_projeto, id_usuario) VALUES (?, ?, ?, ?)");
+            $stmtCom->execute([$titulo, $descricao, $idProjeto, $_SESSION['usuario_id']]);
+            
+            // Recarrega a página com aviso de sucesso
+            header("Location: projeto.php?id=" . $idProjeto . "&sucesso=comentario_adicionado");
+            exit;
+        }
+    }
+}
+
 $reqDao = new \php\RequisitosDao($pdo);
 $imgDao = new \php\ImagensDao($pdo);
 
 $requisitos = $reqDao->listarPorProjeto($idProjeto);
 $imagens    = $imgDao->listarPorProjeto($idProjeto);
+
+$stmtComentarios = $pdo->prepare("
+    SELECT c.*, u.nome AS nome_autor 
+    FROM tb_comentarios c 
+    JOIN tb_usuarios u ON c.id_usuario = u.id 
+    WHERE c.id_projeto = ? 
+    ORDER BY c.data_comentario DESC
+");
+$stmtComentarios->execute([$idProjeto]);
+$comentarios = $stmtComentarios->fetchAll(PDO::FETCH_ASSOC);
 
 $editando    = isset($_GET['editar']) ? (int)$_GET['editar'] : 0;
 $reqEdicao   = $editando ? $reqDao->buscarPorId($editando) : null;
@@ -45,7 +81,7 @@ function badgeStatus(int $statusReq): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Requick – <?= htmlspecialchars($projeto['nome_projeto']) ?></title>
     <link rel="stylesheet" href="../css/projeto.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/comentarios.css" /> <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -78,12 +114,13 @@ function badgeStatus(int $statusReq): string {
             <div class="alerta alerta-sucesso">
                 <?php
                 $msgs = [
-                    'requisito_adicionado' => '✅ Requisito adicionado com sucesso!',
-                    'requisito_editado'    => '✅ Requisito atualizado com sucesso!',
-                    'requisito_excluido'   => '✅ Requisito excluído com sucesso!',
-                    'upload_ok'            => '✅ Imagem(ns) enviada(s) com sucesso!',
-                    'upload_parcial'       => '⚠️ Algumas imagens foram enviadas (arquivos inválidos ignorados).',
-                    'imagem_excluida'      => '✅ Imagem excluída com sucesso!',
+                    'requisito_adicionado'  => '✅ Requisito adicionado com sucesso!',
+                    'requisito_editado'     => '✅ Requisito atualizado com sucesso!',
+                    'requisito_excluido'    => '✅ Requisito excluído com sucesso!',
+                    'upload_ok'             => '✅ Imagem(ns) enviada(s) com sucesso!',
+                    'upload_parcial'        => '⚠️ Algumas imagens foram enviadas (arquivos inválidos ignorados).',
+                    'imagem_excluida'       => '✅ Imagem excluída com sucesso!',
+                    'comentario_adicionado' => '✅ Comentário adicionado com sucesso!' // Adicionado aviso novo
                 ];
                 echo $msgs[$sucesso] ?? 'Operação realizada com sucesso.';
                 ?>
@@ -102,29 +139,48 @@ function badgeStatus(int $statusReq): string {
             </div>
         <?php endif; ?>
 
-        <section class="bloco-comentarios">
-            <div class="titulo-sessao">
-                Comentários e/ou solicitações de mudanças
-                <span class="badge-contador">+3</span>
+        <section class="SecaoComentarios">
+            <div class="CabecalhoComentarios">
+                <h2 class="TituloComentariosSecao">
+                    Comentários e solicitações de mudanças 
+                    <?php if (count($comentarios) > 0): ?>
+                        <span class="badge-contador">+<?= count($comentarios) ?></span>
+                    <?php endif; ?>
+                </h2>
+                
+                <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'Cliente'): ?>
+                    <label for="CheckboxComentario" class="btn-header btn-dark" style="cursor: pointer; font-size: 0.85rem;">
+                        <i class="fa-solid fa-plus"></i> Adicionar Comentário
+                    </label>
+                <?php endif; ?>
             </div>
-            <div class="linha-comentario">
-                <div class="avatar-comentario">AN</div>
-                <div class="conteudo-comentario">
-                    <p><strong>Solicitação de mudança:</strong> Preciso que revise o requisito RF02</p>
-                    <span>André - Cliente</span>
-                </div>
+
+            <div class="ListaComentarios">
+                <?php if (count($comentarios) > 0): ?>
+                    <?php foreach ($comentarios as $com): ?>
+                        <div class="ItemComentario">
+                            <h4 class="TituloComentario"><?= htmlspecialchars($com['titulo_comentario']) ?></h4>
+                            <p class="TextoComentario"><?= nl2br(htmlspecialchars($com['descricao_comentario'])) ?></p>
+                            <span class="AutorComentario">Enviado por <strong><?= htmlspecialchars($com['nome_autor']) ?></strong> em <?= date('d/m/Y H:i', strtotime($com['data_comentario'])) ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="SemComentarios">Nenhum comentário realizado ainda.</p>
+                <?php endif; ?>
             </div>
-            <div class="seta-container"><i class="fa-solid fa-chevron-down"></i></div>
         </section>
 
-        <div id="busca-e-add-requisito">
+        <div id="busca-e-add-requisito" style="margin-top: 30px;">
             <div class="ContainerBusca">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="campoBusca" class="CampoBusca" placeholder="Buscar requisitos, tags ou responsáveis nesse projeto" />
             </div>
-            <label for="CheckboxRequisito" class="BotaoCadastrar">
-                Adicionar requisito <i class="fa-solid fa-plus"></i>
-            </label>
+            
+            <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
+                <label for="CheckboxRequisito" class="BotaoCadastrar">
+                    Adicionar requisito <i class="fa-solid fa-plus"></i>
+                </label>
+            <?php endif; ?>
         </div>
 
         <section class="container-requisitos">
@@ -133,7 +189,10 @@ function badgeStatus(int $statusReq): string {
                 <div class="col-status">Status</div>
                 <div class="col-prioridade">Prioridade</div>
                 <div class="col-responsavel">Responsável</div>
-                <div class="col-acoes">Ações</div>
+                
+                <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
+                    <div class="col-acoes">Ações</div>
+                <?php endif; ?>
             </div>
 
             <?php if (empty($requisitos)): ?>
@@ -157,23 +216,25 @@ function badgeStatus(int $statusReq): string {
                         <div class="col-status"><?= badgeStatus((int)$req['status_req']) ?></div>
                         <div class="col-prioridade"><?= $req['prioridade'] ?: '--' ?></div>
                         <div class="col-responsavel"><?= htmlspecialchars($req['responsavel'] ?: '--') ?></div>
-                        <div class="col-acoes">
+                        
+                        <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
+                            <div class="col-acoes">
+                                <button
+                                    class="btn-excluir"
+                                    onclick="confirmarExclusao(<?= $req['id'] ?>, <?= $idProjeto ?>, '<?= addslashes(htmlspecialchars($req['titulo_requisito'])) ?>')"
+                                >
+                                    <i class="fa-regular fa-trash-can"></i> Excluir
+                                </button>
 
-                            <button
-                                class="btn-excluir"
-                                onclick="confirmarExclusao(<?= $req['id'] ?>, <?= $idProjeto ?>, '<?= addslashes(htmlspecialchars($req['titulo_requisito'])) ?>')"
-                            >
-                                <i class="fa-regular fa-trash-can"></i> Excluir
-                            </button>
+                                <a
+                                    href="projeto.php?id=<?= $idProjeto ?>&editar=<?= $req['id'] ?>"
+                                    class="btn-editar"
+                                >
+                                    <i class="fa-regular fa-pen-to-square"></i> Editar
+                                </a>
+                            </div>
+                        <?php endif; ?>
 
-                            <a
-                                href="projeto.php?id=<?= $idProjeto ?>&editar=<?= $req['id'] ?>"
-                                class="btn-editar"
-                            >
-                                <i class="fa-regular fa-pen-to-square"></i> Editar
-                            </a>
-
-                        </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -184,44 +245,48 @@ function badgeStatus(int $statusReq): string {
         <section class="SecaoImagens">
             <h2 class="TituloSecaoImagens"><i class="fa-regular fa-image"></i> Imagens do Projeto</h2>
 
-            <form action="imagem_handler.php" method="POST" enctype="multipart/form-data" id="formUpload">
-                <input type="hidden" name="acao"       value="upload" />
-                <input type="hidden" name="id_projeto" value="<?= $idProjeto ?>" />
+            <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
+                <form action="imagem_handler.php" method="POST" enctype="multipart/form-data" id="formUpload">
+                    <input type="hidden" name="acao"       value="upload" />
+                    <input type="hidden" name="id_projeto" value="<?= $idProjeto ?>" />
 
-                <div class="ZonaUpload" id="zonaUpload">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <p>Arraste imagens aqui ou clique para selecionar</p>
-                    <small>Formatos aceitos: JPG, JPEG, PNG · Múltiplos arquivos permitidos</small>
-                    <input type="file" name="imagens[]" id="inputImagens"
-                           class="InputArquivoOculto" accept=".jpg,.jpeg,.png" multiple />
-                </div>
+                    <div class="ZonaUpload" id="zonaUpload">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p>Arraste imagens aqui ou clique para selecionar</p>
+                        <small>Formatos aceitos: JPG, JPEG, PNG · Múltiplos arquivos permitidos</small>
+                        <input type="file" name="imagens[]" id="inputImagens"
+                               class="InputArquivoOculto" accept=".jpg,.jpeg,.png" multiple />
+                    </div>
 
-                <div class="GradePreview" id="gradePreview"></div>
+                    <div class="GradePreview" id="gradePreview"></div>
 
-                <button type="submit" class="BotaoEnviarImagens" id="btnEnviar">
-                    <i class="fa-solid fa-upload"></i> Enviar imagens
-                </button>
-            </form>
+                    <button type="submit" class="BotaoEnviarImagens" id="btnEnviar">
+                        <i class="fa-solid fa-upload"></i> Enviar imagens
+                    </button>
+                </form>
+            <?php endif; ?>
 
             <?php if (!empty($imagens)): ?>
-                <div class="GradeImagens">
+                <div class="GradeImagens" style="margin-top: 15px;">
                     <?php foreach ($imagens as $img): ?>
                         <div class="CardImagem">
                             <img src="../<?= htmlspecialchars($img['caminho']) ?>"
                                  alt="<?= htmlspecialchars($img['nome_arquivo']) ?>"
                                  loading="lazy" />
 
-                            <form action="imagem_handler.php" method="POST"
-                                  onsubmit="return false;"
-                                  id="formExcluirImg<?= $img['id'] ?>">
-                                <input type="hidden" name="acao"       value="excluir" />
-                                <input type="hidden" name="id_imagem"  value="<?= $img['id'] ?>" />
-                                <input type="hidden" name="id_projeto" value="<?= $idProjeto ?>" />
-                                <button type="button" class="BotaoExcluirImagem"
-                                        onclick="confirmarExclusaoImagem(<?= $img['id'] ?>, '<?= addslashes(htmlspecialchars($img['nome_arquivo'])) ?>')">
-                                    <i class="fa-regular fa-trash-can"></i> Excluir
-                                </button>
-                            </form>
+                            <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
+                                <form action="imagem_handler.php" method="POST"
+                                      onsubmit="return false;"
+                                      id="formExcluirImg<?= $img['id'] ?>">
+                                    <input type="hidden" name="acao"       value="excluir" />
+                                    <input type="hidden" name="id_imagem"  value="<?= $img['id'] ?>" />
+                                    <input type="hidden" name="id_projeto" value="<?= $idProjeto ?>" />
+                                    <button type="button" class="BotaoExcluirImagem"
+                                            onclick="confirmarExclusaoImagem(<?= $img['id'] ?>, '<?= addslashes(htmlspecialchars($img['nome_arquivo'])) ?>')">
+                                        <i class="fa-regular fa-trash-can"></i> Excluir
+                                    </button>
+                                </form>
+                            <?php endif; ?>
 
                             <div class="NomeImagem"><?= htmlspecialchars($img['nome_arquivo']) ?></div>
                         </div>
@@ -286,6 +351,43 @@ function badgeStatus(int $statusReq): string {
         </div>
     </aside>
 </div>
+
+
+<?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'Cliente'): ?>
+<div class="WrapperModal">
+    <input type="checkbox" id="CheckboxComentario" class="CheckboxModal" />
+    <div class="FundoModal">
+        <label for="CheckboxComentario" class="SombreaModal"></label>
+        <div class="ContainerModal">
+            <label for="CheckboxComentario" class="BotaoVoltar">
+                <i class="fa-solid fa-angle-left"></i> Voltar
+            </label>
+            <img src="../img/logo-requick.png" alt="Requick" class="ImagemLogoModal" />
+            <h2 class="TituloModal">Novo Comentário</h2>
+
+            <form action="projeto.php?id=<?= $idProjeto ?>" method="POST">
+                <input type="hidden" name="acao" value="add_comentario" />
+
+                <div class="GrupoFormulario">
+                    <label class="LabelFormulario">Título do comentário *</label>
+                    <input type="text" name="titulo_comentario" class="CampoFormulario"
+                        placeholder="Ex: Dúvida sobre o RF01" required />
+                </div>
+                
+                <div class="GrupoFormulario">
+                    <label class="LabelFormulario">Descrição *</label>
+                    <textarea name="descricao_comentario" class="CampoFormulario CampoTextarea"
+                            placeholder="Descreva a sua dúvida ou sugestão de melhoria..." required></textarea>
+                </div>
+                
+                <div class="CentralizarDiv2">
+                    <button type="submit" class="BotaoCriar">Salvar Comentário</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 
 
 <div class="WrapperModal">
@@ -512,17 +614,19 @@ const preview   = document.getElementById('gradePreview');
 const btnEnviar = document.getElementById('btnEnviar');
 let   arquivos  = new DataTransfer(); // mantém lista de arquivos
 
-zona.addEventListener('click', () => inputFile.click());
+if(zona && inputFile) { // Proteção caso o usuário logado seja cliente e a Div nem seja renderizada no html
+    zona.addEventListener('click', () => inputFile.click());
 
-zona.addEventListener('dragover', e => { e.preventDefault(); zona.classList.add('arrastando'); });
-zona.addEventListener('dragleave', () => zona.classList.remove('arrastando'));
-zona.addEventListener('drop', e => {
-    e.preventDefault();
-    zona.classList.remove('arrastando');
-    processarArquivos(e.dataTransfer.files);
-});
+    zona.addEventListener('dragover', e => { e.preventDefault(); zona.classList.add('arrastando'); });
+    zona.addEventListener('dragleave', () => zona.classList.remove('arrastando'));
+    zona.addEventListener('drop', e => {
+        e.preventDefault();
+        zona.classList.remove('arrastando');
+        processarArquivos(e.dataTransfer.files);
+    });
 
-inputFile.addEventListener('change', () => processarArquivos(inputFile.files));
+    inputFile.addEventListener('change', () => processarArquivos(inputFile.files));
+}
 
 function processarArquivos(novos) {
     const permitidos = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -540,7 +644,6 @@ function processarArquivos(novos) {
             btn.classList.add('RemoverPreview');
             btn.innerHTML = '×';
             btn.onclick = () => {
-                // Remove do DataTransfer
                 const nova = new DataTransfer();
                 Array.from(arquivos.files)
                      .filter(f => f !== file)

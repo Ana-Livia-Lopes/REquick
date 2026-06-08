@@ -1,0 +1,61 @@
+/* =========================
+   SEÇÃO DE COMENTÁRIOS
+========================= */
+.SecaoComentarios {
+    margin-top: 30px;
+    background: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.CabecalhoComentarios {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 12px;
+}
+
+.TituloComentariosSecao {
+    font-size: 18px;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.ItemComentario {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 18px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.TituloComentario {
+    font-size: 15px;
+    color: #1e293b;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.TextoComentario {
+    font-size: 14px;
+    color: #475569;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.AutorComentario {
+    font-size: 12px;
+    color: #94a3b8;
+    display: block;
+}
+
+.SemComentarios {
+    color: #64748b;
+    font-style: italic;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px 0;
+}

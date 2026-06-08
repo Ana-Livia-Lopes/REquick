@@ -5,6 +5,63 @@
 .CheckboxModal {
   display: none;
 }
+/* Autocomplete de empresa */
+    .AutocompleteWrapper {
+      position: relative;
+    }
+    .AutocompleteWrapper .CampoFormulario {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .ListaAutocomplete {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      max-height: 180px;
+      overflow-y: auto;
+      z-index: 9999;
+      display: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    }
+    .ListaAutocomplete.Visivel {
+      display: block;
+    }
+    .ItemAutocomplete {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: .9rem;
+      transition: background .15s;
+    }
+    .ItemAutocomplete:hover,
+    .ItemAutocomplete.Ativo {
+      background: #f0f4ff;
+    }
+    .MensagemModal {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: .875rem;
+      display: none;
+    }
+    .MensagemModal.Sucesso {
+      background: #e6f9ed;
+      color: #1a7a3c;
+      display: block;
+    }
+    .MensagemModal.Erro {
+      background: #fdecea;
+      color: #b91c1c;
+      display: block;
+    }
+    .BotaoCriar:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
 
 /* fundo escuro discreto */
 .FundoModal {

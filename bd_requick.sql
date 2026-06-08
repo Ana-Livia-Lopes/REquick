@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 07, 2026 at 10:34 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Tempo de geração: 08/06/2026 às 15:31
+-- Versão do servidor: 10.4.32-MariaDB
+-- Versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,35 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bd_requick`
+-- Banco de dados: `bd_requick`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_empresa`
+-- Estrutura para tabela `tb_comentarios`
+--
+
+CREATE TABLE `tb_comentarios` (
+  `id` int(11) NOT NULL,
+  `titulo_comentario` varchar(255) NOT NULL,
+  `descricao_comentario` text NOT NULL,
+  `id_projeto` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `data_comentario` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `tb_comentarios`
+--
+
+INSERT INTO `tb_comentarios` (`id`, `titulo_comentario`, `descricao_comentario`, `id_projeto`, `id_usuario`, `data_comentario`) VALUES
+(1, 'Teste', 'testando', 2, 4, '2026-06-08 10:19:45');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `tb_empresa`
 --
 
 CREATE TABLE `tb_empresa` (
@@ -34,7 +56,7 @@ CREATE TABLE `tb_empresa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `tb_empresa`
+-- Despejando dados para a tabela `tb_empresa`
 --
 
 INSERT INTO `tb_empresa` (`id`, `nome_empresa`, `cnpj`) VALUES
@@ -44,7 +66,7 @@ INSERT INTO `tb_empresa` (`id`, `nome_empresa`, `cnpj`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_historico`
+-- Estrutura para tabela `tb_historico`
 --
 
 CREATE TABLE `tb_historico` (
@@ -56,7 +78,7 @@ CREATE TABLE `tb_historico` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `tb_historico`
+-- Despejando dados para a tabela `tb_historico`
 --
 
 INSERT INTO `tb_historico` (`id`, `data`, `modificacao`, `autor`, `id_requisito`) VALUES
@@ -65,7 +87,7 @@ INSERT INTO `tb_historico` (`id`, `data`, `modificacao`, `autor`, `id_requisito`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_imagens_projeto`
+-- Estrutura para tabela `tb_imagens_projeto`
 --
 
 CREATE TABLE `tb_imagens_projeto` (
@@ -79,7 +101,58 @@ CREATE TABLE `tb_imagens_projeto` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_projetos`
+-- Estrutura para tabela `tb_log_acesso_projeto`
+--
+
+CREATE TABLE `tb_log_acesso_projeto` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_projeto` int(11) NOT NULL,
+  `data_acesso` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `tb_log_acesso_projeto`
+--
+
+INSERT INTO `tb_log_acesso_projeto` (`id`, `id_usuario`, `id_projeto`, `data_acesso`) VALUES
+(1, 1, 2, '2026-06-08 09:08:19'),
+(2, 1, 1, '2026-06-08 09:08:34'),
+(3, 1, 1, '2026-06-08 09:09:26'),
+(4, 4, 2, '2026-06-08 09:13:06'),
+(5, 1, 5, '2026-06-08 09:32:05'),
+(6, 1, 5, '2026-06-08 09:34:45'),
+(7, 1, 1, '2026-06-08 09:46:54'),
+(8, 1, 1, '2026-06-08 10:08:10'),
+(9, 1, 1, '2026-06-08 10:15:22'),
+(10, 1, 1, '2026-06-08 10:15:24'),
+(11, 1, 1, '2026-06-08 10:15:24'),
+(12, 1, 1, '2026-06-08 10:15:24'),
+(13, 1, 1, '2026-06-08 10:15:25'),
+(14, 4, 2, '2026-06-08 10:15:35'),
+(15, 1, 5, '2026-06-08 10:18:52'),
+(16, 1, 5, '2026-06-08 10:19:17'),
+(17, 4, 2, '2026-06-08 10:19:34'),
+(18, 4, 2, '2026-06-08 10:19:45'),
+(19, 4, 2, '2026-06-08 10:19:45'),
+(20, 4, 2, '2026-06-08 10:19:48'),
+(21, 4, 2, '2026-06-08 10:20:36'),
+(22, 4, 2, '2026-06-08 10:20:41'),
+(23, 4, 2, '2026-06-08 10:21:08'),
+(24, 4, 2, '2026-06-08 10:21:09'),
+(25, 4, 2, '2026-06-08 10:21:12'),
+(26, 1, 5, '2026-06-08 10:23:34'),
+(27, 1, 2, '2026-06-08 10:23:39'),
+(28, 1, 2, '2026-06-08 10:23:44'),
+(29, 1, 2, '2026-06-08 10:23:48'),
+(30, 1, 1, '2026-06-08 10:23:59'),
+(31, 1, 1, '2026-06-08 10:24:55'),
+(32, 1, 5, '2026-06-08 10:26:56');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `tb_projetos`
 --
 
 CREATE TABLE `tb_projetos` (
@@ -93,18 +166,20 @@ CREATE TABLE `tb_projetos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `tb_projetos`
+-- Despejando dados para a tabela `tb_projetos`
 --
 
 INSERT INTO `tb_projetos` (`id`, `nome_projeto`, `data_criacao`, `id_empresa`, `descricao`, `status_projeto`, `escopo_inicial`) VALUES
 (1, 'Sistema ERP v2', '2023-10-01', 1, NULL, 0, 'não definido'),
 (2, 'App Mobile Cliente', '2023-11-15', 1, NULL, 0, 'não definido'),
-(3, 'Portal de Intranet', '2024-01-10', 2, NULL, 0, 'não definido');
+(3, 'Portal de Intranet', '2024-01-10', 2, NULL, 0, 'não definido'),
+(4, 'Teste', '2026-06-08', 2, 'teste', 0, 'não definido'),
+(5, 'Assim', '2026-06-08', 2, 'Testando', 0, 'não definido');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_requisitos`
+-- Estrutura para tabela `tb_requisitos`
 --
 
 CREATE TABLE `tb_requisitos` (
@@ -121,19 +196,19 @@ CREATE TABLE `tb_requisitos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `tb_requisitos`
+-- Despejando dados para a tabela `tb_requisitos`
 --
 
 INSERT INTO `tb_requisitos` (`id`, `titulo_requisito`, `descricao_requisito`, `tipo`, `prioridade`, `responsavel`, `autor`, `data_modificacao`, `id_projeto`, `status_req`) VALUES
-(1, 'Login via Biometria', NULL, 'Funcional', NULL, NULL, NULL, '2026-06-07 13:03:34', 1, 0),
+(1, 'Login via Biometria', '', 'Funcional', '', '', '', '2026-06-08 09:00:05', 1, 1),
 (2, 'Tempo de resposta < 2s', NULL, 'Nao Funcional', NULL, NULL, NULL, '2026-06-07 13:03:34', 1, 0),
 (3, 'Exportação de Relatórios', NULL, 'Funcional', NULL, NULL, NULL, '2026-06-07 13:03:34', 3, 0),
-(4, 'teste', '', 'Funcional', 'Alta', 'teste', 'teste', '2026-06-07 13:39:18', 2, 0);
+(4, 'sodhg', '', 'Funcional', 'Alta', 'teste', 'teste', '2026-06-08 10:23:48', 2, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_usuarios`
+-- Estrutura para tabela `tb_usuarios`
 --
 
 CREATE TABLE `tb_usuarios` (
@@ -148,27 +223,35 @@ CREATE TABLE `tb_usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_usuarios`
+-- Despejando dados para a tabela `tb_usuarios`
 --
 
 INSERT INTO `tb_usuarios` (`id`, `nome`, `email`, `tipo_usuario`, `especializacao`, `senha`, `id_empresa`, `status`) VALUES
 (1, 'admin', 'admin@tech.com', 'Administrador', 'Administracao', '$2y$10$VQEiJ/e5eZu5TTGaL/p33uzkHmW/2NpGtkwAY74mVBlNy4QE6IBbG', 1, 'ativo'),
-(3, 'Carlos Prado', 'carlos@inova.com', 'Funcionario', 'Suporte Técnico', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 2, 'inativo'),
+(3, 'Carlos Prado', 'carlos@inova.com', 'Desenvolvedor', 'Suporte Técnico', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 2, 'inativo'),
 (4, 'Aldair', 'aldair@email.com', 'Cliente', 'Desenvolvedor', '$2y$10$.JdYtbixlLOeNIyQ9jR1s.i831rRFZQw6s5GECiGmj0AmVXvIrnRG', 1, 'ativo');
 
 --
--- Indexes for dumped tables
+-- Índices para tabelas despejadas
 --
 
 --
--- Indexes for table `tb_empresa`
+-- Índices de tabela `tb_comentarios`
+--
+ALTER TABLE `tb_comentarios`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_comentario_projeto` (`id_projeto`),
+  ADD KEY `fk_comentario_usuario` (`id_usuario`);
+
+--
+-- Índices de tabela `tb_empresa`
 --
 ALTER TABLE `tb_empresa`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `cnpj` (`cnpj`);
 
 --
--- Indexes for table `tb_historico`
+-- Índices de tabela `tb_historico`
 --
 ALTER TABLE `tb_historico`
   ADD PRIMARY KEY (`id`),
@@ -176,28 +259,36 @@ ALTER TABLE `tb_historico`
   ADD KEY `fk_historico_requisito` (`id_requisito`);
 
 --
--- Indexes for table `tb_imagens_projeto`
+-- Índices de tabela `tb_imagens_projeto`
 --
 ALTER TABLE `tb_imagens_projeto`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_projeto` (`id_projeto`);
 
 --
--- Indexes for table `tb_projetos`
+-- Índices de tabela `tb_log_acesso_projeto`
+--
+ALTER TABLE `tb_log_acesso_projeto`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_log_usuario` (`id_usuario`),
+  ADD KEY `fk_log_projeto` (`id_projeto`);
+
+--
+-- Índices de tabela `tb_projetos`
 --
 ALTER TABLE `tb_projetos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_projeto_empresa` (`id_empresa`);
 
 --
--- Indexes for table `tb_requisitos`
+-- Índices de tabela `tb_requisitos`
 --
 ALTER TABLE `tb_requisitos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_requisito_projeto` (`id_projeto`);
 
 --
--- Indexes for table `tb_usuarios`
+-- Índices de tabela `tb_usuarios`
 --
 ALTER TABLE `tb_usuarios`
   ADD PRIMARY KEY (`id`),
@@ -205,76 +296,102 @@ ALTER TABLE `tb_usuarios`
   ADD KEY `fk_usuario_empresa` (`id_empresa`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT para tabelas despejadas
 --
 
 --
--- AUTO_INCREMENT for table `tb_empresa`
+-- AUTO_INCREMENT de tabela `tb_comentarios`
+--
+ALTER TABLE `tb_comentarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de tabela `tb_empresa`
 --
 ALTER TABLE `tb_empresa`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `tb_historico`
+-- AUTO_INCREMENT de tabela `tb_historico`
 --
 ALTER TABLE `tb_historico`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `tb_imagens_projeto`
+-- AUTO_INCREMENT de tabela `tb_imagens_projeto`
 --
 ALTER TABLE `tb_imagens_projeto`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_projetos`
+-- AUTO_INCREMENT de tabela `tb_log_acesso_projeto`
 --
-ALTER TABLE `tb_projetos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `tb_log_acesso_projeto`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
--- AUTO_INCREMENT for table `tb_requisitos`
+-- AUTO_INCREMENT de tabela `tb_projetos`
+--
+ALTER TABLE `tb_projetos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de tabela `tb_requisitos`
 --
 ALTER TABLE `tb_requisitos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `tb_usuarios`
+-- AUTO_INCREMENT de tabela `tb_usuarios`
 --
 ALTER TABLE `tb_usuarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Constraints for dumped tables
+-- Restrições para tabelas despejadas
 --
 
 --
--- Constraints for table `tb_historico`
+-- Restrições para tabelas `tb_comentarios`
+--
+ALTER TABLE `tb_comentarios`
+  ADD CONSTRAINT `fk_comentario_projeto` FOREIGN KEY (`id_projeto`) REFERENCES `tb_projetos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_comentario_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `tb_usuarios` (`id`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabelas `tb_historico`
 --
 ALTER TABLE `tb_historico`
   ADD CONSTRAINT `fk_historico_autor` FOREIGN KEY (`autor`) REFERENCES `tb_usuarios` (`id`),
   ADD CONSTRAINT `fk_historico_requisito` FOREIGN KEY (`id_requisito`) REFERENCES `tb_requisitos` (`id`);
 
 --
--- Constraints for table `tb_imagens_projeto`
+-- Restrições para tabelas `tb_imagens_projeto`
 --
 ALTER TABLE `tb_imagens_projeto`
   ADD CONSTRAINT `tb_imagens_projeto_ibfk_1` FOREIGN KEY (`id_projeto`) REFERENCES `tb_projetos` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `tb_projetos`
+-- Restrições para tabelas `tb_log_acesso_projeto`
+--
+ALTER TABLE `tb_log_acesso_projeto`
+  ADD CONSTRAINT `fk_log_projeto` FOREIGN KEY (`id_projeto`) REFERENCES `tb_projetos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_log_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `tb_usuarios` (`id`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabelas `tb_projetos`
 --
 ALTER TABLE `tb_projetos`
   ADD CONSTRAINT `fk_projeto_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `tb_empresa` (`id`);
 
 --
--- Constraints for table `tb_requisitos`
+-- Restrições para tabelas `tb_requisitos`
 --
 ALTER TABLE `tb_requisitos`
   ADD CONSTRAINT `fk_requisito_projeto` FOREIGN KEY (`id_projeto`) REFERENCES `tb_projetos` (`id`);
 
 --
--- Constraints for table `tb_usuarios`
+-- Restrições para tabelas `tb_usuarios`
 --
 ALTER TABLE `tb_usuarios`
   ADD CONSTRAINT `fk_usuario_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `tb_empresa` (`id`);

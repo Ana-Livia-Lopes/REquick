@@ -215,7 +215,7 @@ $usuarios = $pdo->query("SELECT u.*, e.nome_empresa FROM tb_usuarios u LEFT JOIN
                             <select name="tipo_usuario" class="CampoFormulario" required>
                                 <option value="" disabled selected>Selecione...</option>
                                 <option value="Cliente">Cliente</option>
-                                <option value="Funcionario">Funcionário</option>
+                                <option value="Funcionario">Desenvolvedor</option>
                                 <option value="Administrador">Administrador</option>
                             </select>
                         </div>

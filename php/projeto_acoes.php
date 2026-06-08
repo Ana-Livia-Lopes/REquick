@@ -173,4 +173,52 @@ class ProjetoDao {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: ['ativos' => 0, 'desativados' => 0];
     }
+
+    public function read_projetos_por_perfil(string $tipo_usuario, ?int $id_empresa): array
+    {
+        if (in_array($tipo_usuario, ['Administrador', 'Desenvolvedor'])) {
+            $stmt = Conexao::getConn()->prepare("
+                SELECT
+                    p.id,
+                    p.nome_projeto,
+                    p.descricao,
+                    p.data_criacao  AS data_modificacao,
+                    h.modificacao,
+                    u.nome          AS autor
+                FROM tb_projetos p
+                LEFT JOIN tb_historico h
+                    ON h.id = (
+                        SELECT h2.id FROM tb_historico h2
+                        WHERE h2.id_requisito = p.id
+                        ORDER BY h2.data DESC LIMIT 1
+                    )
+                LEFT JOIN tb_usuarios u ON u.id = h.autor
+                ORDER BY p.id DESC
+            ");
+            $stmt->execute();
+        } else {
+            $stmt = Conexao::getConn()->prepare("
+                SELECT
+                    p.id,
+                    p.nome_projeto,
+                    p.descricao,
+                    p.data_criacao  AS data_modificacao,
+                    h.modificacao,
+                    u.nome          AS autor
+                FROM tb_projetos p
+                LEFT JOIN tb_historico h
+                    ON h.id = (
+                        SELECT h2.id FROM tb_historico h2
+                        WHERE h2.id_requisito = p.id
+                        ORDER BY h2.data DESC LIMIT 1
+                    )
+                LEFT JOIN tb_usuarios u ON u.id = h.autor
+                WHERE p.id_empresa = :id_empresa
+                ORDER BY p.id DESC
+            ");
+            $stmt->execute([':id_empresa' => $id_empresa]);
+        }
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
