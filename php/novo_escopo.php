@@ -28,23 +28,22 @@ require_once 'auth.php'
             </div>
             <div class="div-titulo-subtitulo-escopo">
                 <h1 class="titulo-escopo">Escopo Inicial</h1>
-                <h3 class="subtitulo-escopo">Centralize aqui as percepções e necessidades coletadas durante as entrevistas com o cliente. Este registro servirá como base estratégica para a estruturação de requisitos e consultas futuras durante todo o ciclo de vida do projeto</h3>
+                <h3 class="subtitulo-escopo">Centralize aqui as percepções e necessidades coletadas durante as entrevistas com o cliente. Este registro servirá como base estratégica para a estruturação de requisitos e consultas futuras durante todo o ciclo de vida do projeto.</h3>
             </div>
             <div id="container-texto">
                 <div id="toolbar">
                     <div class="group">
-                        <button data-cmd="bold" title="Negrito"><i data-lucide="bold"></i></button>
-                        <button data-cmd="italic" title="Itálico"><i data-lucide="italic"></i></button>
-                        <button data-cmd="strike" title="Riscado"><i data-lucide="strikethrough"></i></button>
+                        <button class='button-active-options' data-cmd="bold" title="Negrito"><i data-lucide="bold"></i></button>
+                        <button class='button-active-options' data-cmd="italic" title="Itálico"><i data-lucide="italic"></i></button>
+                        <button class='button-active-options' data-cmd="strike" title="Riscado"><i data-lucide="strikethrough"></i></button>
                     </div>
                     <div class="group">
-                        <button data-cmd="paragraph" title="Parágrafo"><i data-lucide="pilcrow"></i></button>
-                        <button data-cmd="h1" title="Título 1">H1</button>
-                        <button data-cmd="h2" title="Título 2">H2</button>
+                        <button class='button-active-options' data-cmd="h1" title="Título 1">H1</button>
+                        <button class='button-active-options' data-cmd="h2" title="Título 2">H2</button>
                     </div>
                     <div class="group">
-                        <button data-cmd="bulletList" title="Lista"><i data-lucide="list"></i></button>
-                        <button data-cmd="orderedList" title="Lista numerada"><i data-lucide="list-ordered"></i></button>
+                        <button class='button-active-options' data-cmd="bulletList" title="Lista"><i data-lucide="list"></i></button>
+                        <button class='button-active-options' data-cmd="orderedList" title="Lista numerada"><i data-lucide="list-ordered"></i></button>
                     </div>
                 </div>
                 <div id="editor"></div>

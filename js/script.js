@@ -32,7 +32,6 @@ const commands = {
   italic: () => editor.chain().focus().toggleItalic().run(),
   strike: () => editor.chain().focus().toggleStrike().run(),
 
-  paragraph: () => editor.chain().focus().setParagraph().run(),
   h1: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
   h2: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
 
@@ -71,9 +70,6 @@ function updateToolbar() {
         break
       case 'strike':
         isActive = editor.isActive('strike')
-        break
-      case 'paragraph':
-        isActive = editor.isActive('paragraph')
         break
       case 'h1':
         isActive = editor.isActive('heading', { level: 1 })
