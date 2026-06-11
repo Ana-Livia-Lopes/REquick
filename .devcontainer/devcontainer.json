@@ -3,6 +3,5 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspace",
-  "forwardPorts": [8000, 3306],
-  "postCreateCommand": "echo 'Environment ready'"
+  "forwardPorts": [8000, 3306]
 }

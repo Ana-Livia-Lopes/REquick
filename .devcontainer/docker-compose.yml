@@ -4,16 +4,13 @@ services:
   app:
     image: mcr.microsoft.com/devcontainers/php:8.2
     volumes:
-      - ../:/workspace:cached
+      - ../:/workspace
     command: sleep infinity
     ports:
       - "8000:8000"
 
   db:
     image: mysql:8.0
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: app
-    ports:
-      - "3306:3306"
