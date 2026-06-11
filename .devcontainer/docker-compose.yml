@@ -4,13 +4,17 @@ services:
   app:
     image: mcr.microsoft.com/devcontainers/php:8.2
     volumes:
-      - ../:/workspace
+      - ..:/workspaces:cached
     command: sleep infinity
-    ports:
-      - "8000:8000"
 
-  db:
+  mysql:
     image: mysql:8.0
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: app
+      MYSQL_ROOT_PASSWORD: app123
+      MYSQL_DATABASE: bd_requick
+      MYSQL_USER: app
+      MYSQL_PASSWORD: ''
+    ports:
+      - "3306:3306"
+    command: --skip-ssl

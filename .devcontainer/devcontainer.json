@@ -2,6 +2,5 @@
   "name": "PHP + MySQL",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
-  "workspaceFolder": "/workspace",
-  "forwardPorts": [8000, 3306]
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
 }
