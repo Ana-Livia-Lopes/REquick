@@ -2,6 +2,17 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once 'auth.php';
+
+require_once 'projeto_acoes.php';
+$projetoDao   = new \php\ProjetoDao();
+$tipo_usuario = $_SESSION['usuario_tipo']    ?? 'Cliente';
+$id_empresa   = $_SESSION['usuario_empresa'] ?? null;
+$id_usuario   = $_SESSION['usuario_id']      ?? null; 
+
+$podeGerenciar = in_array($tipo_usuario, ['Administrador', 'Desenvolvedor']);
+$podeExcluir   = ($tipo_usuario === 'Administrador'); // Permissão exclusiva para exclusão
+
+$projetos = $projetoDao->read_projetos_por_perfil($tipo_usuario, (int)$id_empresa, (int)$id_usuario);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -13,20 +24,14 @@ require_once 'auth.php';
   <link rel="stylesheet" href="../css/projetos.css" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="LayoutPadrao">
 
-<?php
-  require_once 'projeto_acoes.php';
-  $projetoDao   = new \php\ProjetoDao();
-  $tipo_usuario = $_SESSION['usuario_tipo']    ?? 'Cliente';
-  $id_empresa   = $_SESSION['usuario_empresa'] ?? null;
-  $podeGerenciar = in_array($tipo_usuario, ['Administrador', 'Desenvolvedor']);
-
-  $projetos = $projetoDao->read_projetos_por_perfil($tipo_usuario, (int)$id_empresa);
-?>
-
-  <?php $paginaAtiva = 'projetos'; include 'navbar_lateral.php'; ?>
+  <?php 
+    $paginaAtiva = 'projetos'; 
+    include 'navbar_lateral.php'; 
+  ?>
 
   <div class="AreaRolavel AreaRolavelDashboard">
     <main class="ConteudoPrincipal">
@@ -52,6 +57,14 @@ require_once 'auth.php';
         <div class="GradeProjetos">
           <?php foreach ($projetos as $projeto): ?>
             <div class="CardProjeto">
+              
+              <?php if ($podeExcluir): ?>
+                <button class="BotaoExcluirProjeto" 
+                        onclick="confirmarExclusaoProjeto(<?= $projeto['id'] ?>, '<?= addslashes(htmlspecialchars($projeto['nome_projeto'])) ?>')" 
+                        title="Excluir Projeto">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              <?php endif; ?>
 
               <h3 class="NomeProjeto">
                 <?= htmlspecialchars($projeto['nome_projeto']) ?>
@@ -151,9 +164,8 @@ require_once 'auth.php';
       let debounceTimer = null;
       let itemAtivo = -1;
 
-      // ── Autocomplete ──────────────────────────────────────────────
       inputEmpresa.addEventListener('input', () => {
-        inputEmpresaId.value = ''; // limpa seleção anterior ao digitar
+        inputEmpresaId.value = ''; 
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => buscarEmpresas(inputEmpresa.value.trim()), 250);
       });
@@ -221,7 +233,7 @@ require_once 'auth.php';
           div.className   = 'ItemAutocomplete';
           div.textContent = emp.nome_empresa;
           div.addEventListener('mousedown', (e) => {
-            e.preventDefault(); // evita blur antes do click
+            e.preventDefault(); 
             inputEmpresa.value   = emp.nome_empresa;
             inputEmpresaId.value = emp.id;
             fecharLista();
@@ -232,7 +244,6 @@ require_once 'auth.php';
         listaEmpresas.classList.add('Visivel');
       }
 
-      // ── Criar projeto ─────────────────────────────────────────────
       btnCriar.addEventListener('click', async () => {
         const nome      = document.getElementById('InputNomeProjeto').value.trim();
         const descricao = document.getElementById('InputDescricao').value.trim();
@@ -266,7 +277,6 @@ require_once 'auth.php';
           if (data.sucesso) {
             exibirMensagem(data.mensagem, 'Sucesso');
             limparFormulario();
-            // Recarrega a lista após 1.5 s e fecha o modal
             setTimeout(() => {
               checkboxModal.checked = false;
               location.reload();
@@ -282,7 +292,6 @@ require_once 'auth.php';
         }
       });
 
-      // ── Utilitários ───────────────────────────────────────────────
       function exibirMensagem(texto, tipo) {
         mensagemModal.textContent = texto;
         mensagemModal.className   = 'MensagemModal' + (tipo ? ' ' + tipo : '');
@@ -296,7 +305,6 @@ require_once 'auth.php';
         inputEmpresaId.value = '';
       }
 
-      // Limpa mensagem ao fechar o modal
       btnVoltar.addEventListener('click', () => {
         exibirMensagem('', '');
         limparFormulario();
@@ -305,6 +313,33 @@ require_once 'auth.php';
     })();
   </script>
   <?php endif; ?>
+
+  <form id="formExcluirProjeto" action="excluir_projeto.php" method="POST" style="display: none;">
+      <input type="hidden" name="id_projeto" id="id_projeto_excluir">
+  </form>
+
+  <script>
+      function confirmarExclusaoProjeto(id, nome) {
+          Swal.fire({
+              title: 'Excluir o projeto?',
+              html: `Tem certeza que deseja apagar o projeto <strong>"${nome}"</strong>?<br>Esta ação é irreversível e excluirá todos os requisitos, convites e históricos atrelados a ele.`,
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#dc2626',
+              cancelButtonColor: '#4a5568',
+              confirmButtonText: 'Sim, excluir',
+              cancelButtonText: 'Cancelar',
+              background: '#1e1e2e',
+              color: '#e2e8f0',
+              iconColor: '#f59e0b',
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  document.getElementById('id_projeto_excluir').value = id;
+                  document.getElementById('formExcluirProjeto').submit();
+              }
+          });
+      }
+  </script>
 
 </body>
 </html>

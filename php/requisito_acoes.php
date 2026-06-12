@@ -99,23 +99,35 @@ class ImagensDao
     public function listarPorProjeto(int $idProjeto): array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT * FROM tb_imagens_projeto WHERE id_projeto = ? ORDER BY data_upload ASC"
+            "SELECT id, id_projeto, nome_arquivo, titulo_imagem, tipo_diagrama, dados, data_upload
+             FROM tb_imagens_projeto
+             WHERE id_projeto = ?
+             ORDER BY data_upload ASC"
         );
         $stmt->execute([$idProjeto]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function salvar(int $idProjeto, string $nomeArquivo, string $caminho): bool
-    {
+    public function salvar(
+        int    $idProjeto,
+        string $nomeArquivo,
+        string $dataUri,
+        string $tituloImagem = '',
+        string $tipoDiagrama = ''
+    ): bool {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO tb_imagens_projeto (id_projeto, nome_arquivo, caminho) VALUES (?, ?, ?)"
+            "INSERT INTO tb_imagens_projeto (id_projeto, nome_arquivo, dados, titulo_imagem, tipo_diagrama)
+             VALUES (?, ?, ?, ?, ?)"
         );
-        return $stmt->execute([$idProjeto, $nomeArquivo, $caminho]);
+        return $stmt->execute([$idProjeto, $nomeArquivo, $dataUri, $tituloImagem, $tipoDiagrama]);
     }
 
     public function buscarPorId(int $id): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM tb_imagens_projeto WHERE id = ?");
+        $stmt = $this->pdo->prepare(
+            "SELECT id, id_projeto, nome_arquivo, titulo_imagem, tipo_diagrama, dados, data_upload
+             FROM tb_imagens_projeto WHERE id = ?"
+        );
         $stmt->execute([$id]);
         return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
     }

@@ -1,88 +1,62 @@
 <?php
 // php/imagem_handler.php
-// Processa upload e exclusão de imagens via POST
 
-require_once __DIR__ . '/conexao.php';
+$pdo  = require_once __DIR__ . '/../config/conexao.php';
 require_once __DIR__ . '/requisito_acoes.php';
 
-$dao   = new \php\ImagensDao($conn);
-$acao  = $_POST['acao']     ?? '';
+$dao   = new \php\ImagensDao($pdo);
+$acao  = $_POST['acao'] ?? '';
 $volta = 'projeto.php?id=' . (int)($_POST['id_projeto'] ?? 0);
 
-// ── Upload ───────────────────────────────────────────────────────────────────
+// ── Upload ────────────────────────────────────────────────────────────────────
 if ($acao === 'upload') {
-    $idProjeto = (int)$_POST['id_projeto'];
+    $idProjeto    = (int)$_POST['id_projeto'];
+    $tituloImagem = trim($_POST['titulo_imagem']  ?? '');
+    $tipoDiagrama = trim($_POST['tipo_diagrama']  ?? '');
 
-    // Pasta de destino: uploads/imagens/<id_projeto>/
-    $pastaBase = __DIR__ . '/../uploads/imagens/' . $idProjeto . '/';
-    if (!is_dir($pastaBase)) {
-        mkdir($pastaBase, 0755, true);
-    }
-
-    $extensoesPermitidas = ['jpg', 'jpeg', 'png'];
-    $erros = [];
-
-    // Suporte a múltiplos arquivos (input name="imagens[]")
-    $arquivos = $_FILES['imagens'] ?? [];
+    $extensoesPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    $arquivos            = $_FILES['imagens'] ?? [];
 
     if (empty($arquivos['name'][0])) {
         header("Location: $volta&erro=nenhum_arquivo");
         exit;
     }
 
-    $total = count($arquivos['name']);
+    $arquivo = [
+        'name'     => $arquivos['name'][0],
+        'tmp_name' => $arquivos['tmp_name'][0],
+        'error'    => $arquivos['error'][0],
+    ];
 
-    for ($i = 0; $i < $total; $i++) {
-        if ($arquivos['error'][$i] !== UPLOAD_ERR_OK) {
-            continue;
-        }
-
-        $nomeOriginal = basename($arquivos['name'][$i]);
-        $ext          = strtolower(pathinfo($nomeOriginal, PATHINFO_EXTENSION));
-
-        if (!in_array($ext, $extensoesPermitidas, true)) {
-            $erros[] = $nomeOriginal;
-            continue;
-        }
-
-        // Nome único para evitar colisões
-        $nomeArquivo = uniqid('img_', true) . '.' . $ext;
-        $caminhoFull = $pastaBase . $nomeArquivo;
-        // Caminho relativo armazenado no banco (a partir da raiz do site)
-        $caminhoWeb  = 'uploads/imagens/' . $idProjeto . '/' . $nomeArquivo;
-
-        if (move_uploaded_file($arquivos['tmp_name'][$i], $caminhoFull)) {
-            $dao->salvar($idProjeto, $nomeOriginal, $caminhoWeb);
-        }
+    if ($arquivo['error'] !== UPLOAD_ERR_OK) {
+        header("Location: $volta&erro=nenhum_arquivo");
+        exit;
     }
 
-    if (!empty($erros)) {
-        header("Location: $volta&sucesso=upload_parcial");
-    } else {
-        header("Location: $volta&sucesso=upload_ok");
+    $ext = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
+
+    if (!in_array($ext, $extensoesPermitidas, true)) {
+        header("Location: $volta&erro=formato_invalido");
+        exit;
     }
+
+    $binario = file_get_contents($arquivo['tmp_name']);
+    $mime    = mime_content_type($arquivo['tmp_name']);
+    $dataUri = 'data:' . $mime . ';base64,' . base64_encode($binario);
+
+    $dao->salvar($idProjeto, $arquivo['name'], $dataUri, $tituloImagem, $tipoDiagrama);
+
+    header("Location: $volta&sucesso=upload_ok");
     exit;
 }
 
-// ── Excluir ──────────────────────────────────────────────────────────────────
+// ── Excluir ───────────────────────────────────────────────────────────────────
 if ($acao === 'excluir') {
-    $id        = (int)$_POST['id_imagem'];
-    $idProjeto = (int)$_POST['id_projeto'];
-    $imagem    = $dao->buscarPorId($id);
-
-    if ($imagem) {
-        // Remove o arquivo físico
-        $caminhoFisico = __DIR__ . '/../' . $imagem['caminho'];
-        if (file_exists($caminhoFisico)) {
-            unlink($caminhoFisico);
-        }
-        $dao->excluir($id);
-    }
-
+    $id = (int)$_POST['id_imagem'];
+    $dao->excluir($id);
     header("Location: $volta&sucesso=imagem_excluida");
     exit;
 }
 
-// Fallback
 header("Location: $volta");
 exit;

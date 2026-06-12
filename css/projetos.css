@@ -28,6 +28,42 @@
       display: none;
       box-shadow: 0 4px 12px rgba(0,0,0,.1);
     }
+
+    .CardProjeto {
+      position: relative; /* Necessário para posicionar o botão no topo da div */
+    }
+    
+    .BotaoExcluirProjeto {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0; /* Invisível por padrão */
+      visibility: hidden;
+      transition: all 0.2s ease-in-out;
+      z-index: 10;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .BotaoExcluirProjeto:hover {
+      background-color: #b91c1c;
+      transform: scale(1.05);
+    }
+
+    /* Quando o mouse passar por cima do CardProjeto, o botão aparece */
+    .CardProjeto:hover .BotaoExcluirProjeto {
+      opacity: 1;
+      visibility: visible;
+    }
     .ListaAutocomplete.Visivel {
       display: block;
     }

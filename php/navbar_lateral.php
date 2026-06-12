@@ -31,10 +31,6 @@ $tipoUsuario = $_SESSION['usuario_tipo'] ?? 'Visitante';
                     <i class="fa-solid fa-user-plus"></i>
                     <span>Cadastro</span>
                 </a>
-                <a href="configuracoes.php" class="ItemMenu <?= $paginaAtiva === 'configuracoes' ? 'ItemMenuAtivo' : '' ?>">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Configurações</span>
-                </a>
             <?php endif; ?>
 
             <a href="logout.php" class="ItemMenu">
