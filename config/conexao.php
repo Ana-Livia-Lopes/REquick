@@ -1,12 +1,14 @@
 <?php
-$host    = 'localhost';
-$usuario = 'root';
-$senha   = '';
-$banco   = 'bd_requick';
+$host = 'mysql';
+$usuario = 'app';
+$senha = 'app123';
+$banco = 'bd_requick';
+$port    = 3306;
 
 try {
+    // A porta DEVE ficar dentro da string do primeiro argumento (DSN)
     $pdo = new \PDO(
-        "mysql:host=$host;dbname=$banco;charset=utf8mb4",
+        "mysql:host=$host;port=$port;dbname=$banco;charset=utf8mb4",
         $usuario,
         $senha,
         [
