@@ -1,12 +1,12 @@
 {
   "name": "PHP & MySQL",
-  "image": "://microsoft.com",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {}
   },
-  "service": "db",
-  "dockerComposeFile": "docker-compose.yml",
-  "postCreateCommand": "sudo service mysql start && composer install",
+  "postCreateCommand": "composer install",
   "forwardPorts": [80, 3306],
   "customizations": {
     "vscode": {
