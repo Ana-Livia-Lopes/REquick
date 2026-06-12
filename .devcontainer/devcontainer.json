@@ -1,6 +1,19 @@
 {
-  "name": "PHP + MariaDB (Docker)",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/var/www/html"
+  "name": "PHP & MySQL",
+  "image": "://microsoft.com",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "service": "db",
+  "dockerComposeFile": "docker-compose.yml",
+  "postCreateCommand": "sudo service mysql start && composer install",
+  "forwardPorts": [80, 3306],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "cweijan.vscode-database-client2"
+      ]
+    }
+  }
 }

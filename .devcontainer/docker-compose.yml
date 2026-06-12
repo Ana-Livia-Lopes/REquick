@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    image: ://microsoft.com
+    volumes:
+      - ..:/workspace
+    working_dir: /workspace
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: bd_requick
+    ports:
+      - "3306:3306"
