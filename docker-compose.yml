@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Serviço da Aplicação Web (PHP + Apache)
+  web:
+    build: .
+    container_name: php_app
+    ports:
+      - "8080:80"
+    volumes:
+      # Mapeia a raiz do seu projeto atual para a pasta pública do Apache
+      - ./:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+  # Serviço do Banco de Dados (Nome alterado para "mysql" para bater com seu conexao.php)
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: bd_requick
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app123
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
