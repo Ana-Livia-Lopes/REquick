@@ -174,8 +174,9 @@ class ProjetoDao {
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: ['ativos' => 0, 'desativados' => 0];
     }
 
-    public function read_projetos_por_perfil(string $tipo_usuario, ?int $id_empresa): array
+    public function read_projetos_por_perfil(string $tipo_usuario, ?int $id_empresa, int $id_usuario = 0): array
     {
+        // Administrador e Desenvolvedor veem TODOS os projetos
         if (in_array($tipo_usuario, ['Administrador', 'Desenvolvedor'])) {
             $stmt = Conexao::getConn()->prepare("
                 SELECT
@@ -189,7 +190,7 @@ class ProjetoDao {
                 LEFT JOIN tb_historico h
                     ON h.id = (
                         SELECT h2.id FROM tb_historico h2
-                        WHERE h2.id_requisito = p.id
+                        WHERE h2.id_projeto = p.id
                         ORDER BY h2.data DESC LIMIT 1
                     )
                 LEFT JOIN tb_usuarios u ON u.id = h.autor
@@ -197,6 +198,7 @@ class ProjetoDao {
             ");
             $stmt->execute();
         } else {
+            // Clientes veem os projetos da empresa DELES **OU** projetos onde foram CONVIDADOS
             $stmt = Conexao::getConn()->prepare("
                 SELECT
                     p.id,
@@ -209,14 +211,25 @@ class ProjetoDao {
                 LEFT JOIN tb_historico h
                     ON h.id = (
                         SELECT h2.id FROM tb_historico h2
-                        WHERE h2.id_requisito = p.id
+                        WHERE h2.id_projeto = p.id
                         ORDER BY h2.data DESC LIMIT 1
                     )
                 LEFT JOIN tb_usuarios u ON u.id = h.autor
-                WHERE p.id_empresa = :id_empresa
+                
+                /* Filtra pela empresa do usuário OU se o ID do usuário está na tabela de convites */
+                WHERE p.id_empresa = :id_empresa 
+                OR p.id IN (
+                    SELECT id_projeto 
+                    FROM tb_projeto_usuarios 
+                    WHERE id_usuario = :id_usuario
+                )
                 ORDER BY p.id DESC
             ");
-            $stmt->execute([':id_empresa' => $id_empresa]);
+            
+            $stmt->execute([
+                ':id_empresa' => $id_empresa,
+                ':id_usuario' => $id_usuario
+            ]);
         }
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

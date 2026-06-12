@@ -1,0 +1,147 @@
+/* ============================================================
+   perfil.css — estilos da página de perfil
+   ============================================================ */
+
+/* ---------- Modal overlay ---------- */
+.ModalOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.ModalOverlay.aberto {
+    display: flex;
+}
+
+/* ---------- Modal box ---------- */
+.ModalBox {
+    background: #fff;
+    border-radius: 14px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    position: relative;
+    animation: modalEntrar 0.18s ease;
+}
+
+@keyframes modalEntrar {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.ModalBox h2 {
+    margin: 0 0 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.ModalFechar {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.ModalFechar:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+/* ---------- Formulário do modal ---------- */
+.FormModal {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.FormModal label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.FormModal input {
+    padding: 0.55rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #1a1a2e;
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+
+.FormModal input:focus {
+    outline: none;
+    border-color: #7f77dd;
+    box-shadow: 0 0 0 3px rgba(127, 119, 221, 0.15);
+}
+
+.BotaoSalvarModal {
+    margin-top: 0.5rem;
+    padding: 0.65rem 1.2rem;
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+}
+
+.BotaoSalvarModal:hover {
+    background: #2d2d5e;
+}
+
+/* ---------- Aviso de logout ---------- */
+.AvisoLogout {
+    font-size: 0.78rem;
+    color: #e07a1a;
+    margin-top: -0.4rem;
+    display: none;
+}
+
+.AvisoLogout.visivel {
+    display: block;
+}
+
+/* ---------- Mensagem de feedback ---------- */
+.MensagemFeedback {
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    display: none;
+}
+
+.MensagemFeedback.sucesso {
+    display: block;
+    background: #eaf3de;
+    color: #3b6d11;
+    border: 1px solid #c0dd97;
+}
+
+.MensagemFeedback.erro {
+    display: block;
+    background: #fcebeb;
+    color: #a32d2d;
+    border: 1px solid #f7c1c1;
+}

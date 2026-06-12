@@ -9,6 +9,7 @@ if ($idProjeto <= 0) {
     exit;
 }
 
+// Registro de acesso ao projeto
 $stmtLog = $pdo->prepare("
     INSERT INTO tb_log_acesso_projeto (id_usuario, id_projeto, data_acesso)
     VALUES (:id_usuario, :id_projeto, NOW())
@@ -18,6 +19,7 @@ $stmtLog->execute([
     'id_projeto'  => $idProjeto
 ]);
 
+// Carrega dados do projeto
 $stmtP = $pdo->prepare("SELECT * FROM tb_projetos WHERE id = ?");
 $stmtP->execute([$idProjeto]);
 $projeto = $stmtP->fetch(PDO::FETCH_ASSOC);
@@ -26,8 +28,8 @@ if (!$projeto) {
     exit;
 }
 
+// Processa adição de comentários (Clientes)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'add_comentario') {
-    // Valida se quem está enviando é realmente um Cliente
     if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'Cliente') {
         $titulo = trim($_POST['titulo_comentario']);
         $descricao = trim($_POST['descricao_comentario']);
@@ -36,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             $stmtCom = $pdo->prepare("INSERT INTO tb_comentarios (titulo_comentario, descricao_comentario, id_projeto, id_usuario) VALUES (?, ?, ?, ?)");
             $stmtCom->execute([$titulo, $descricao, $idProjeto, $_SESSION['usuario_id']]);
             
-            // Recarrega a página com aviso de sucesso
             header("Location: projeto.php?id=" . $idProjeto . "&sucesso=comentario_adicionado");
             exit;
         }
@@ -49,6 +50,23 @@ $imgDao = new \php\ImagensDao($pdo);
 $requisitos = $reqDao->listarPorProjeto($idProjeto);
 $imagens    = $imgDao->listarPorProjeto($idProjeto);
 
+// 1. Busca usuários para o Select único de Convites
+$stmtUsuarios = $pdo->query("SELECT id, nome, email FROM tb_usuarios ORDER BY nome ASC");
+$todosUsuarios = $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
+
+// 2. Busca o Feed de Atividades baseado na SUA tabela 'tb_historico'
+$stmtFeed = $pdo->prepare("
+    SELECT h.data AS data_hora, h.modificacao AS acao_realizada, u.nome AS nome_autor 
+    FROM tb_historico h
+    JOIN tb_requisitos r ON h.id_requisito = r.id
+    JOIN tb_usuarios u ON h.autor = u.id
+    WHERE r.id_projeto = ?
+    ORDER BY h.data DESC
+");
+$stmtFeed->execute([$idProjeto]);
+$feedAtividades = $stmtFeed->fetchAll(PDO::FETCH_ASSOC);
+
+// Busca comentários do projeto
 $stmtComentarios = $pdo->prepare("
     SELECT c.*, u.nome AS nome_autor 
     FROM tb_comentarios c 
@@ -68,10 +86,14 @@ $erro    = $_GET['erro']    ?? '';
 $paginaAtiva = 'projetos';
 include 'navbar_lateral.php';
 
+// Definição de permissões baseadas no tipo de usuário
+$isCliente = isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'Cliente';
+$podeConvidar = isset($_SESSION['usuario_tipo']) && in_array($_SESSION['usuario_tipo'], ['Administrador', 'Desenvolvedor']);
+
 function badgeStatus(int $statusReq): string {
     return $statusReq === 1
-        ? '<span class="badge green">Validado</span>'
-        : '<span class="badge yellow">Em Andamento</span>';
+        ? '<span class="badge green" title="Clique para alterar para Em Análise">Validado</span>'
+        : '<span class="badge yellow" title="Clique para Validar">Em Análise</span>';
 }
 ?>
 <!DOCTYPE html>
@@ -81,9 +103,21 @@ function badgeStatus(int $statusReq): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Requick – <?= htmlspecialchars($projeto['nome_projeto']) ?></title>
     <link rel="stylesheet" href="../css/projeto.css" />
-    <link rel="stylesheet" href="../css/comentarios.css" /> <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/imagens.css" />
+    <link rel="stylesheet" href="../css/comentarios.css" /> 
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Ajustes visuais para integrar o Tom Select ao tema escuro do painel */
+        .ts-control { border-radius: 8px; border: 1px solid #4a5568; background-color: #2d3748; color: white; padding: 10px; }
+        .ts-dropdown { background-color: #2d3748; color: white; border-radius: 8px; border: 1px solid #4a5568; }
+        .ts-dropdown .option { padding: 10px; }
+        .ts-dropdown .option:hover { background-color: #4a5568; color: white;}
+    </style>
 </head>
 <body>
 
@@ -96,15 +130,15 @@ function badgeStatus(int $statusReq): string {
                 Voltar para projetos
             </a>
             <div class="AcoesCabecalho">
-                <a href="exportar_projeto.php?id=<?= $idProjeto ?>" class="btn-header btn-dark">
-                    Exportar Projeto <i class="fa-solid fa-file-export"></i>
-                </a>
                 <a href="novo_escopo.php?id=<?= $idProjeto ?>" class="btn-header btn-dark">
                     Visualizar escopo inicial <i class="fa-solid fa-file-lines"></i>
                 </a>
-                <label for="CheckboxConvidar" class="btn-header btn-light">
-                    Convidar Usuários <i class="fa-solid fa-user-plus"></i>
-                </label>
+                
+                <?php if ($podeConvidar): ?>
+                    <label for="CheckboxConvidar" class="btn-header btn-light">
+                        Convidar Usuários <i class="fa-solid fa-user-plus"></i>
+                    </label>
+                <?php endif; ?>
             </div>
         </header>
 
@@ -114,13 +148,14 @@ function badgeStatus(int $statusReq): string {
             <div class="alerta alerta-sucesso">
                 <?php
                 $msgs = [
-                    'requisito_adicionado'  => '✅ Requisito adicionado com sucesso!',
-                    'requisito_editado'     => '✅ Requisito atualizado com sucesso!',
-                    'requisito_excluido'    => '✅ Requisito excluído com sucesso!',
-                    'upload_ok'             => '✅ Imagem(ns) enviada(s) com sucesso!',
-                    'upload_parcial'        => '⚠️ Algumas imagens foram enviadas (arquivos inválidos ignorados).',
-                    'imagem_excluida'       => '✅ Imagem excluída com sucesso!',
-                    'comentario_adicionado' => '✅ Comentário adicionado com sucesso!' // Adicionado aviso novo
+                    'requisito_adicionado'  => 'Requisito adicionado com sucesso!',
+                    'requisito_editado'     => 'Requisito atualizado com sucesso!',
+                    'requisito_excluido'    => 'Requisito excluído com sucesso!',
+                    'upload_ok'             => 'Imagem(ns) enviada(s) com sucesso!',
+                    'upload_parcial'        => 'Algumas imagens foram enviadas (arquivos inválidos ignorados).',
+                    'imagem_excluida'       => 'Imagem excluída com sucesso!',
+                    'comentario_adicionado' => 'Comentário adicionado com sucesso!',
+                    'usuario_convidado'     => 'Usuário adicionado ao projeto com sucesso!',
                 ];
                 echo $msgs[$sucesso] ?? 'Operação realizada com sucesso.';
                 ?>
@@ -130,9 +165,11 @@ function badgeStatus(int $statusReq): string {
             <div class="alerta alerta-erro">
                 <?php
                 $errMsgs = [
-                    'titulo_vazio'     => '❌ O título do requisito não pode ser vazio.',
-                    'titulo_duplicado' => '❌ Já existe um requisito com esse título neste projeto.',
-                    'nenhum_arquivo'   => '❌ Nenhum arquivo foi selecionado.',
+                    'titulo_vazio'     => 'O título do requisito não pode ser vazio.',
+                    'titulo_duplicado' => 'Já existe um requisito com esse título neste projeto.',
+                    'nenhum_arquivo'   => 'Nenhum arquivo foi selecionado.',
+                    'usuario_ja_convidado'   => 'Este usuário já faz parte deste projeto.', // <- Adicione esta linha
+                    'sem_permissao'          => 'Você não tem permissão para realizar esta ação.' // <- Adicione esta linha
                 ];
                 echo $errMsgs[$erro] ?? 'Ocorreu um erro. Tente novamente.';
                 ?>
@@ -148,7 +185,7 @@ function badgeStatus(int $statusReq): string {
                     <?php endif; ?>
                 </h2>
                 
-                <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'Cliente'): ?>
+                <?php if ($isCliente): ?>
                     <label for="CheckboxComentario" class="btn-header btn-dark" style="cursor: pointer; font-size: 0.85rem;">
                         <i class="fa-solid fa-plus"></i> Adicionar Comentário
                     </label>
@@ -176,7 +213,7 @@ function badgeStatus(int $statusReq): string {
                 <input type="text" id="campoBusca" class="CampoBusca" placeholder="Buscar requisitos, tags ou responsáveis nesse projeto" />
             </div>
             
-            <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
+            <?php if (!$isCliente): ?>
                 <label for="CheckboxRequisito" class="BotaoCadastrar">
                     Adicionar requisito <i class="fa-solid fa-plus"></i>
                 </label>
@@ -190,7 +227,7 @@ function badgeStatus(int $statusReq): string {
                 <div class="col-prioridade">Prioridade</div>
                 <div class="col-responsavel">Responsável</div>
                 
-                <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
+                <?php if (!$isCliente): ?>
                     <div class="col-acoes">Ações</div>
                 <?php endif; ?>
             </div>
@@ -213,11 +250,16 @@ function badgeStatus(int $statusReq): string {
                                 </span>
                             </div>
                         </div>
-                        <div class="col-status"><?= badgeStatus((int)$req['status_req']) ?></div>
+                        
+                        <div class="col-status" 
+                             <?= !$isCliente ? 'onclick="alternarStatus('.$req['id'].', '.$req['status_req'].')" style="cursor: pointer; opacity: 0.9; transition: 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.9"' : '' ?>>
+                            <?= badgeStatus((int)$req['status_req']) ?>
+                        </div>
+                        
                         <div class="col-prioridade"><?= $req['prioridade'] ?: '--' ?></div>
                         <div class="col-responsavel"><?= htmlspecialchars($req['responsavel'] ?: '--') ?></div>
                         
-                        <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
+                        <?php if (!$isCliente): ?>
                             <div class="col-acoes">
                                 <button
                                     class="btn-excluir"
@@ -243,61 +285,140 @@ function badgeStatus(int $statusReq): string {
         </section>
 
         <section class="SecaoImagens">
-            <h2 class="TituloSecaoImagens"><i class="fa-regular fa-image"></i> Imagens do Projeto</h2>
+            <?php
+            $tiposDiagrama = ['Diagrama de Caso de Uso','Diagrama de Classe','Diagrama de Sequência','Diagrama de Atividade','DER'];
+            $imagensPorTipo = [];
+            foreach ($tiposDiagrama as $t) $imagensPorTipo[$t] = [];
+            foreach ($imagens as $img) {
+                $t = $img['tipo_diagrama'] ?? '';
+                if (isset($imagensPorTipo[$t])) $imagensPorTipo[$t][] = $img;
+            }
+            ?>
 
-            <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
+            <div class="CabecalhoSecaoImagens">
+                <h2 class="TituloSecaoImagens"><i class="fa-regular fa-image"></i> Imagens do Projeto</h2>
+                <?php if (!$isCliente): ?>
+                    <button class="btn-header btn-dark" id="btnAbrirModalImagem">
+                        <i class="fa-solid fa-plus"></i> Adicionar imagem
+                    </button>
+                <?php endif; ?>
+            </div>
+
+            <div class="ContainerAbas">
+                <div class="ListaAbas" role="tablist">
+                    <?php foreach ($tiposDiagrama as $i => $tipo): ?>
+                        <button class="AbaBtn <?= $i === 0 ? 'ativa' : '' ?>"
+                                role="tab"
+                                data-aba="aba-<?= $i ?>"
+                                onclick="trocarAba(this)">
+                            <?= htmlspecialchars($tipo) ?>
+                            <?php $cnt = count($imagensPorTipo[$tipo]); if ($cnt > 0): ?>
+                                <span class="AbaContador"><?= $cnt ?></span>
+                            <?php endif; ?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+
+                <?php foreach ($tiposDiagrama as $i => $tipo): ?>
+                    <div class="PainelAba <?= $i === 0 ? 'ativo' : '' ?>" id="aba-<?= $i ?>">
+                        <?php if (empty($imagensPorTipo[$tipo])): ?>
+                            <div class="PainelVazio">
+                                <i class="fa-regular fa-image"></i>
+                                <p>Nenhuma imagem de <strong><?= htmlspecialchars($tipo) ?></strong> adicionada ainda.</p>
+                            </div>
+                        <?php else: ?>
+                            <div class="GradeImagens">
+                                <?php foreach ($imagensPorTipo[$tipo] as $img): ?>
+                                    <div class="CardImagem">
+                                        <div class="CardImagemThumb"
+                                             onclick="abrirLightbox('<?= addslashes(htmlspecialchars($img['dados'])) ?>','<?= addslashes(htmlspecialchars($img['titulo_imagem'] ?? $img['nome_arquivo'])) ?>')">
+                                            <img src="<?= htmlspecialchars($img['dados']) ?>"
+                                                 alt="<?= htmlspecialchars($img['nome_arquivo']) ?>"
+                                                 loading="lazy" />
+                                            <div class="CardImagemOverlay">
+                                                <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                            </div>
+                                            <?php if (!$isCliente): ?>
+                                                <form action="imagem_handler.php" method="POST"
+                                                      onsubmit="return false;"
+                                                      id="formExcluirImg<?= $img['id'] ?>"
+                                                      class="FormExcluirImagem">
+                                                    <input type="hidden" name="acao"       value="excluir" />
+                                                    <input type="hidden" name="id_imagem"  value="<?= $img['id'] ?>" />
+                                                    <input type="hidden" name="id_projeto" value="<?= $idProjeto ?>" />
+                                                    <button type="button" class="BotaoExcluirImagem"
+                                                            onclick="event.stopPropagation(); confirmarExclusaoImagem(<?= $img['id'] ?>, '<?= addslashes(htmlspecialchars($img['titulo_imagem'] ?? $img['nome_arquivo'])) ?>')"
+                                                            title="Excluir imagem">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="CardImagemInfo">
+                                            <p class="NomeImagem"><?= htmlspecialchars($img['titulo_imagem'] ?? $img['nome_arquivo']) ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <div class="ModalOverlayImg" id="modalUploadImagem">
+            <div class="ModalBoxImg">
+                <div class="ModalHeaderImg">
+                    <h2><i class="fa-solid fa-image"></i> Adicionar Imagem</h2>
+                    <button class="ModalFecharImg" id="btnFecharModalImagem">&times;</button>
+                </div>
                 <form action="imagem_handler.php" method="POST" enctype="multipart/form-data" id="formUpload">
                     <input type="hidden" name="acao"       value="upload" />
                     <input type="hidden" name="id_projeto" value="<?= $idProjeto ?>" />
-
-                    <div class="ZonaUpload" id="zonaUpload">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <p>Arraste imagens aqui ou clique para selecionar</p>
-                        <small>Formatos aceitos: JPG, JPEG, PNG · Múltiplos arquivos permitidos</small>
-                        <input type="file" name="imagens[]" id="inputImagens"
-                               class="InputArquivoOculto" accept=".jpg,.jpeg,.png" multiple />
+                    <div class="GrupoFormulario">
+                        <label class="LabelFormulario">Título da imagem</label>
+                        <input type="text" name="titulo_imagem" class="CampoFormulario"
+                               placeholder="Ex: Diagrama principal do sistema" required />
                     </div>
-
-                    <div class="GradePreview" id="gradePreview"></div>
-
-                    <button type="submit" class="BotaoEnviarImagens" id="btnEnviar">
-                        <i class="fa-solid fa-upload"></i> Enviar imagens
-                    </button>
-                </form>
-            <?php endif; ?>
-
-            <?php if (!empty($imagens)): ?>
-                <div class="GradeImagens" style="margin-top: 15px;">
-                    <?php foreach ($imagens as $img): ?>
-                        <div class="CardImagem">
-                            <img src="../<?= htmlspecialchars($img['caminho']) ?>"
-                                 alt="<?= htmlspecialchars($img['nome_arquivo']) ?>"
-                                 loading="lazy" />
-
-                            <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] !== 'Cliente'): ?>
-                                <form action="imagem_handler.php" method="POST"
-                                      onsubmit="return false;"
-                                      id="formExcluirImg<?= $img['id'] ?>">
-                                    <input type="hidden" name="acao"       value="excluir" />
-                                    <input type="hidden" name="id_imagem"  value="<?= $img['id'] ?>" />
-                                    <input type="hidden" name="id_projeto" value="<?= $idProjeto ?>" />
-                                    <button type="button" class="BotaoExcluirImagem"
-                                            onclick="confirmarExclusaoImagem(<?= $img['id'] ?>, '<?= addslashes(htmlspecialchars($img['nome_arquivo'])) ?>')">
-                                        <i class="fa-regular fa-trash-can"></i> Excluir
-                                    </button>
-                                </form>
-                            <?php endif; ?>
-
-                            <div class="NomeImagem"><?= htmlspecialchars($img['nome_arquivo']) ?></div>
+                    <div class="GrupoFormulario">
+                        <label class="LabelFormulario">Tipo de diagrama</label>
+                        <select name="tipo_diagrama" class="CampoFormulario" required>
+                            <option value="" disabled selected>Selecione o tipo...</option>
+                            <option value="Diagrama de Caso de Uso">Diagrama de Caso de Uso</option>
+                            <option value="Diagrama de Classe">Diagrama de Classe</option>
+                            <option value="Diagrama de Sequência">Diagrama de Sequência</option>
+                            <option value="Diagrama de Atividade">Diagrama de Atividade</option>
+                            <option value="DER">DER</option>
+                        </select>
+                    </div>
+                    <div class="GrupoFormulario">
+                        <label class="LabelFormulario">Arquivo de imagem</label>
+                        <div class="ZonaUpload" id="zonaUpload">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <p>Arraste a imagem aqui ou clique para selecionar</p>
+                            <small>Formatos aceitos: JPG, JPEG, PNG</small>
+                            <input type="file" name="imagens[]" id="inputImagens"
+                                   class="InputArquivoOculto" accept=".jpg,.jpeg,.png" />
                         </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php else: ?>
-                <p style="color:#718096; font-family:'Sora',sans-serif; font-size:.9rem; margin-top:8px;">
-                    Nenhuma imagem adicionada ainda.
-                </p>
-            <?php endif; ?>
-        </section>
+                        <div class="GradePreview" id="gradePreview"></div>
+                    </div>
+                    <div class="BotoesModalImg">
+                        <button type="button" class="BotaoCancelarModal" id="btnCancelarModalImagem">Cancelar</button>
+                        <button type="submit" class="BotaoCriar">
+                            <i class="fa-solid fa-upload"></i> Enviar imagem
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="LightboxOverlay" id="lightbox" onclick="fecharLightbox()">
+            <div class="LightboxBox" onclick="event.stopPropagation()">
+                <button class="LightboxFechar" onclick="fecharLightbox()">&times;</button>
+                <img id="lightboxImg" src="" alt="" />
+                <p id="lightboxTitulo"></p>
+            </div>
+        </div>
 
     </main>
 
@@ -326,34 +447,36 @@ function badgeStatus(int $statusReq): string {
 
         <div class="FeedAtividades">
             <h2 class="TituloFeed">Feed de Atividades</h2>
-            <ul class="ListaAtividades">
-                <?php foreach (array_slice(array_reverse($requisitos), 0, 5) as $req): ?>
-                    <li class="ItemAtividade">
-                        <div class="AvatarAtividade">
-                            <?= strtoupper(substr($req['autor'] ?? 'S', 0, 2)) ?>
-                        </div>
-                        <div class="ConteudoAtividade">
-                            <div class="LinhaAtividade">
-                                <p class="NomeAtividade"><?= htmlspecialchars($req['autor'] ?? 'Sistema') ?></p>
-                                <p class="TempoAtividade">
-                                    <?= $req['data_modificacao']
-                                        ? date('d/m H:i', strtotime($req['data_modificacao']))
-                                        : '--' ?>
+            <ul class="ListaAtividades" style="max-height: 420px; overflow-y: auto; padding-right: 8px;">
+                <?php if (empty($feedAtividades)): ?>
+                    <p style="text-align:center; color:#718096; font-size:14px; margin-top:20px;">Nenhuma atividade registrada.</p>
+                <?php else: ?>
+                    <?php foreach ($feedAtividades as $ativ): ?>
+                        <li class="ItemAtividade">
+                            <div class="AvatarAtividade">
+                                <?= strtoupper(substr($ativ['nome_autor'] ?? 'S', 0, 2)) ?>
+                            </div>
+                            <div class="ConteudoAtividade">
+                                <div class="LinhaAtividade">
+                                    <p class="NomeAtividade"><?= htmlspecialchars($ativ['nome_autor'] ?? 'Sistema') ?></p>
+                                    <p class="TempoAtividade">
+                                        <?= date('d/m H:i', strtotime($ativ['data_hora'])) ?>
+                                    </p>
+                                </div>
+                                <p class="TextoAtividade">
+                                    <?= htmlspecialchars($ativ['acao_realizada']) ?>
                                 </p>
                             </div>
-                            <p class="TextoAtividade">
-                                modificou "<?= htmlspecialchars($req['titulo_requisito']) ?>"
-                            </p>
-                        </div>
-                    </li>
-                <?php endforeach; ?>
+                        </li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </ul>
         </div>
     </aside>
 </div>
 
 
-<?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'Cliente'): ?>
+<?php if ($isCliente): ?>
 <div class="WrapperModal">
     <input type="checkbox" id="CheckboxComentario" class="CheckboxModal" />
     <div class="FundoModal">
@@ -500,13 +623,6 @@ function badgeStatus(int $statusReq): string {
                         value="<?= htmlspecialchars($reqEdicao['responsavel'] ?? '') ?>" />
                 </div>
                 <div class="GrupoFormulario">
-                    <label class="LabelFormulario">Status</label>
-                    <select name="status" class="CampoFormulario">
-                        <option value="0" <?= $reqEdicao['status_req']==0 ? 'selected':'' ?>>Em Andamento</option>
-                        <option value="1" <?= $reqEdicao['status_req']==1 ? 'selected':'' ?>>Validado</option>
-                    </select>
-                </div>
-                <div class="GrupoFormulario">
                     <label class="LabelFormulario">Autor (quem está editando)</label>
                     <input type="text" name="autor" class="CampoFormulario"
                         value="<?= htmlspecialchars($reqEdicao['autor'] ?? '') ?>" />
@@ -520,6 +636,7 @@ function badgeStatus(int $statusReq): string {
 </div>
 <?php endif; ?>
 
+<?php if ($podeConvidar): ?>
 <div class="WrapperModal">
     <input type="checkbox" id="CheckboxConvidar" class="CheckboxModal" />
     <div class="FundoModal">
@@ -530,27 +647,28 @@ function badgeStatus(int $statusReq): string {
             </label>
             <img src="../img/logo-requick.png" alt="Requick" class="ImagemLogoModal">
             <h2 class="TituloModal">Convidar Pessoas</h2>
-            <div class="GrupoFormulario">
-                <label class="LabelFormulario">E-mail do usuário</label>
-                <input type="email" class="CampoFormulario" placeholder="Digite o e-mail">
-            </div>
-            <div class="GrupoFormulario">
-                <label class="LabelFormulario">Função no projeto</label>
-                <select class="CampoFormulario">
-                    <option>Responsável</option><option>Cliente</option>
-                    <option>Desenvolvedor</option><option>Analista</option><option>Visualizador</option>
-                </select>
-            </div>
-            <div class="GrupoFormulario">
-                <label class="LabelFormulario">Mensagem (opcional)</label>
-                <textarea class="CampoFormulario CampoTextarea" placeholder="Digite uma mensagem..."></textarea>
-            </div>
-            <div class="CentralizarDiv2">
-                <button class="BotaoCriar">Convidar</button>
-            </div>
+            <form action="convite_handler.php" method="POST">
+                <input type="hidden" name="id_projeto" value="<?= $idProjeto ?>" />
+                
+                <div class="GrupoFormulario">
+                    <label class="LabelFormulario">Selecione o usuário</label>
+                    <select id="select-usuarios" name="id_usuario" required placeholder="Pesquise por nome ou e-mail...">
+                        <option value="">Pesquise por nome ou e-mail...</option>
+                        <?php foreach($todosUsuarios as $u): ?>
+                            <option value="<?= $u['id'] ?>">
+                                <?= htmlspecialchars($u['nome'] . ' (' . $u['email'] . ')') ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="CentralizarDiv2" style="margin-top: 25px;">
+                    <button type="submit" class="BotaoCriar">Convidar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+<?php endif; ?>
 
 <form id="formExcluirReq" action="requisito_handler.php" method="POST" style="display:none">
     <input type="hidden" name="acao"          value="excluir" />
@@ -558,7 +676,29 @@ function badgeStatus(int $statusReq): string {
     <input type="hidden" name="id_projeto"    value="<?= $idProjeto ?>" />
 </form>
 
+<form id="formToggleStatus" action="requisito_handler.php" method="POST" style="display:none">
+    <input type="hidden" name="acao"         value="toggle_status" />
+    <input type="hidden" name="id_requisito" id="toggleIdReq" />
+    <input type="hidden" name="id_projeto"   value="<?= $idProjeto ?>" />
+    <input type="hidden" name="status_atual" id="toggleStatusAtual" />
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Inicialização do Tom Select no modal de convites para permitir digitação autocomplete
+    if(document.getElementById('select-usuarios')){
+        new TomSelect("#select-usuarios",{
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        });
+    }
+});
+
+// Filtro em tempo real na tabela de requisitos
 document.getElementById('campoBusca').addEventListener('input', function () {
     const termo = this.value.toLowerCase();
     document.querySelectorAll('.tabela-linha').forEach(linha => {
@@ -567,19 +707,21 @@ document.getElementById('campoBusca').addEventListener('input', function () {
     });
 });
 
+// Acionamento automático do formulário oculto para inversão do status em 1 clique
+function alternarStatus(idReq, statusAtual) {
+    document.getElementById('toggleIdReq').value = idReq;
+    document.getElementById('toggleStatusAtual').value = statusAtual;
+    document.getElementById('formToggleStatus').submit();
+}
+
 function confirmarExclusao(id, idProjeto, titulo) {
     Swal.fire({
         title: 'Excluir requisito?',
         html: `Tem certeza que deseja excluir <strong>"${titulo}"</strong>?<br>Esta ação não pode ser desfeita.`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc2626',
-        cancelButtonColor:  '#4a5568',
-        confirmButtonText:  'Sim, excluir',
-        cancelButtonText:   'Cancelar',
-        background: '#1e1e2e',
-        color: '#e2e8f0',
-        iconColor: '#f59e0b',
+        icon: 'warning', showCancelButton: true,
+        confirmButtonColor: '#dc2626', cancelButtonColor: '#4a5568',
+        confirmButtonText: 'Sim, excluir', cancelButtonText: 'Cancelar',
+        background: '#1e1e2e', color: '#e2e8f0', iconColor: '#f59e0b',
     }).then(result => {
         if (result.isConfirmed) {
             document.getElementById('hiddenIdReq').value = id;
@@ -592,15 +734,10 @@ function confirmarExclusaoImagem(id, nome) {
     Swal.fire({
         title: 'Excluir imagem?',
         html: `Deseja remover <strong>"${nome}"</strong>?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc2626',
-        cancelButtonColor:  '#4a5568',
-        confirmButtonText:  'Sim, excluir',
-        cancelButtonText:   'Cancelar',
-        background: '#1e1e2e',
-        color: '#e2e8f0',
-        iconColor: '#f59e0b',
+        icon: 'warning', showCancelButton: true,
+        confirmButtonColor: '#dc2626', cancelButtonColor: '#4a5568',
+        confirmButtonText: 'Sim, excluir', cancelButtonText: 'Cancelar',
+        background: '#1e1e2e', color: '#e2e8f0', iconColor: '#f59e0b',
     }).then(result => {
         if (result.isConfirmed) {
             document.getElementById('formExcluirImg' + id).submit();
@@ -608,60 +745,81 @@ function confirmarExclusaoImagem(id, nome) {
     });
 }
 
+function trocarAba(btn) {
+    document.querySelectorAll('.AbaBtn').forEach(b => b.classList.remove('ativa'));
+    document.querySelectorAll('.PainelAba').forEach(p => p.classList.remove('ativo'));
+    btn.classList.add('ativa');
+    document.getElementById(btn.dataset.aba).classList.add('ativo');
+}
+
+/* Modal upload de imagens */
+const modalImg    = document.getElementById('modalUploadImagem');
+const btnAbrirImg = document.getElementById('btnAbrirModalImagem');
+const btnFecharImg= document.getElementById('btnFecharModalImagem');
+const btnCancelar = document.getElementById('btnCancelarModalImagem');
+
+if (btnAbrirImg)  btnAbrirImg.addEventListener('click',  () => modalImg.classList.add('aberto'));
+if (btnFecharImg) btnFecharImg.addEventListener('click', fecharModalImg);
+if (btnCancelar)  btnCancelar.addEventListener('click',  fecharModalImg);
+if (modalImg)     modalImg.addEventListener('click', e => { if (e.target === modalImg) fecharModalImg(); });
+
+function fecharModalImg() {
+    if (modalImg) modalImg.classList.remove('aberto');
+}
+
+/* Upload zona de arrastar arquivo e preview */
 const zona      = document.getElementById('zonaUpload');
 const inputFile = document.getElementById('inputImagens');
 const preview   = document.getElementById('gradePreview');
-const btnEnviar = document.getElementById('btnEnviar');
-let   arquivos  = new DataTransfer(); // mantém lista de arquivos
+let   arquivos  = new DataTransfer();
 
-if(zona && inputFile) { // Proteção caso o usuário logado seja cliente e a Div nem seja renderizada no html
+if (zona && inputFile) {
     zona.addEventListener('click', () => inputFile.click());
-
-    zona.addEventListener('dragover', e => { e.preventDefault(); zona.classList.add('arrastando'); });
+    zona.addEventListener('dragover',  e => { e.preventDefault(); zona.classList.add('arrastando'); });
     zona.addEventListener('dragleave', () => zona.classList.remove('arrastando'));
     zona.addEventListener('drop', e => {
         e.preventDefault();
         zona.classList.remove('arrastando');
         processarArquivos(e.dataTransfer.files);
     });
-
     inputFile.addEventListener('change', () => processarArquivos(inputFile.files));
 }
 
 function processarArquivos(novos) {
     const permitidos = ['image/jpeg', 'image/jpg', 'image/png'];
-    Array.from(novos).forEach(file => {
-        if (!permitidos.includes(file.type)) return;
-        arquivos.items.add(file);
-        const reader = new FileReader();
-        reader.onload = e => {
-            const wrap  = document.createElement('div');
-            wrap.classList.add('ItemPreview');
-            const img   = document.createElement('img');
-            img.src     = e.target.result;
-            const btn   = document.createElement('button');
-            btn.type    = 'button';
-            btn.classList.add('RemoverPreview');
-            btn.innerHTML = '×';
-            btn.onclick = () => {
-                const nova = new DataTransfer();
-                Array.from(arquivos.files)
-                     .filter(f => f !== file)
-                     .forEach(f => nova.items.add(f));
-                arquivos = nova;
-                inputFile.files = arquivos.files;
-                wrap.remove();
-                if (arquivos.files.length === 0) btnEnviar.classList.remove('visivel');
-            };
-            wrap.appendChild(img);
-            wrap.appendChild(btn);
-            preview.appendChild(wrap);
-        };
-        reader.readAsDataURL(file);
-    });
+    arquivos  = new DataTransfer();
+    preview.innerHTML = '';
+    const file = novos[0];
+    if (!file || !permitidos.includes(file.type)) return;
+    arquivos.items.add(file);
+    const reader = new FileReader();
+    reader.onload = e => {
+        const wrap = document.createElement('div');
+        wrap.classList.add('ItemPreview');
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.classList.add('RemoverPreview');
+        btn.innerHTML = '×';
+        btn.onclick = () => { arquivos = new DataTransfer(); inputFile.files = arquivos.files; wrap.remove(); };
+        wrap.appendChild(img);
+        wrap.appendChild(btn);
+        preview.appendChild(wrap);
+    };
+    reader.readAsDataURL(file);
     inputFile.files = arquivos.files;
-    if (arquivos.files.length > 0) btnEnviar.classList.add('visivel');
 }
+
+function abrirLightbox(src, titulo) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxTitulo').textContent = titulo;
+    document.getElementById('lightbox').classList.add('aberto');
+}
+function fecharLightbox() {
+    document.getElementById('lightbox').classList.remove('aberto');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { fecharLightbox(); fecharModalImg(); } });
 </script>
 
 </body>

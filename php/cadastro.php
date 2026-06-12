@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
             $email      = trim($_POST['email']);
             $tipo       = $_POST['tipo_usuario'];
             $espec      = trim($_POST['especializacao']);
-            $id_empresa = $_POST['id_empresa'];
+            $id_empresa = ($tipo === 'Administrador') ? null : ($_POST['id_empresa'] ?? null);
             $senhaCriptografada = password_hash($_POST['senha'], PASSWORD_DEFAULT);
             $stmt = $pdo->prepare("INSERT INTO tb_usuarios (nome, email, tipo_usuario, especializacao, senha, id_empresa) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->execute([$nome, $email, $tipo, $espec, $senhaCriptografada, $id_empresa]);
@@ -212,16 +212,16 @@ $usuarios = $pdo->query("SELECT u.*, e.nome_empresa FROM tb_usuarios u LEFT JOIN
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div class="GrupoFormulario">
                             <label class="LabelFormulario">Tipo de Usuário</label>
-                            <select name="tipo_usuario" class="CampoFormulario" required>
+                            <select name="tipo_usuario" id="select_tipo_create" class="CampoFormulario" required>
                                 <option value="" disabled selected>Selecione...</option>
                                 <option value="Cliente">Cliente</option>
                                 <option value="Funcionario">Desenvolvedor</option>
                                 <option value="Administrador">Administrador</option>
                             </select>
                         </div>
-                        <div class="GrupoFormulario">
+                        <div class="GrupoFormulario" id="wrap_empresa_create">
                             <label class="LabelFormulario">Empresa</label>
-                            <select name="id_empresa" class="CampoFormulario" required>
+                            <select name="id_empresa" id="select_empresa_create" class="CampoFormulario">
                                 <option value="" disabled selected>Selecione...</option>
                                 <?php foreach ($empresas as $emp): ?>
                                     <option value="<?= $emp['id'] ?>"><?= htmlspecialchars($emp['nome_empresa']) ?></option>
@@ -369,6 +369,23 @@ $usuarios = $pdo->query("SELECT u.*, e.nome_empresa FROM tb_usuarios u LEFT JOIN
     </div>
 
     <script>
+        // Oculta/exibe campo empresa conforme tipo selecionado no cadastro
+        (function () {
+            const selectTipo    = document.getElementById('select_tipo_create');
+            const wrapEmpresa   = document.getElementById('wrap_empresa_create');
+            const selectEmpresa = document.getElementById('select_empresa_create');
+
+            function atualizarEmpresa() {
+                const isAdmin = selectTipo.value === 'Administrador';
+                wrapEmpresa.style.display = isAdmin ? 'none' : '';
+                selectEmpresa.required    = !isAdmin;
+                if (isAdmin) selectEmpresa.value = '';
+            }
+
+            selectTipo.addEventListener('change', atualizarEmpresa);
+            atualizarEmpresa();
+        })();
+
         function filtrarTabela(inputId, tableId, colunaIndex) {
             let filter = document.getElementById(inputId).value.toUpperCase();
             let trs    = document.getElementById(tableId).getElementsByTagName("tr");
