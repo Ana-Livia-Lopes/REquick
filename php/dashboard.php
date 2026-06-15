@@ -260,26 +260,58 @@ if (!$isCliente && $_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 }
 
-                // ─── FEED: filtrado pela empresa do usuário logado ────────────────────────
-                $sqlFeed = "
-                    SELECT
-                        h.modificacao,
-                        h.data,
-                        u.nome  AS autor_nome,
-                        r.titulo_requisito,
-                        p.nome_projeto
-                    FROM tb_historico h
-                    INNER JOIN tb_usuarios   u ON u.id = h.autor
-                    INNER JOIN tb_requisitos r ON r.id = h.id_requisito
-                    INNER JOIN tb_projetos   p ON p.id = r.id_projeto
-                    WHERE p.id_empresa = :id_empresa
-                    ORDER BY h.data DESC
-                    LIMIT 10
-                ";
+                // ─── FEED: filtrado por perfil do usuário logado ─────────────────────────
+                // Administrador vê tudo; Desenvolvedor/Cliente vê apenas projetos
+                // da sua empresa + projetos convidados via tb_projeto_usuarios
+
+                if ($tipoUsuario === 'Administrador') {
+                    $sqlFeed = "
+                        SELECT
+                            h.modificacao,
+                            h.data,
+                            u.nome  AS autor_nome,
+                            r.titulo_requisito,
+                            p.nome_projeto
+                        FROM tb_historico h
+                        INNER JOIN tb_usuarios u ON u.id = h.autor
+                        INNER JOIN tb_projetos p ON p.id = h.id_projeto
+                        LEFT JOIN  tb_requisitos r ON r.id = h.id_requisito
+                        ORDER BY h.data DESC
+                        LIMIT 10
+                    ";
+                    $paramsFeed = [];
+                } else {
+                    $sqlFeed = "
+                        SELECT
+                            h.modificacao,
+                            h.data,
+                            u.nome  AS autor_nome,
+                            r.titulo_requisito,
+                            p.nome_projeto
+                        FROM tb_historico h
+                        INNER JOIN tb_usuarios u ON u.id = h.autor
+                        INNER JOIN tb_projetos p ON p.id = h.id_projeto
+                        LEFT JOIN  tb_requisitos r ON r.id = h.id_requisito
+                        WHERE (
+                            p.id_empresa = :id_empresa
+                            OR p.id IN (
+                                SELECT id_projeto
+                                FROM tb_projeto_usuarios
+                                WHERE id_usuario = :id_usuario
+                            )
+                        )
+                        ORDER BY h.data DESC
+                        LIMIT 10
+                    ";
+                    $paramsFeed = [
+                        ':id_empresa' => $idEmpresaUsuario,
+                        ':id_usuario' => $idUsuarioLogado,
+                    ];
+                }
 
                 try {
                     $stmtFeed = $pdo->prepare($sqlFeed);
-                    $stmtFeed->execute(['id_empresa' => $idEmpresaUsuario]);
+                    $stmtFeed->execute($paramsFeed);
                     $atividades = $stmtFeed->fetchAll(PDO::FETCH_ASSOC);
 
                     if (count($atividades) > 0) {
@@ -299,8 +331,10 @@ if (!$isCliente && $_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <p class="TempoAtividade"><?= tempoAtras($atividade['data']) ?></p>
                                     </div>
                                     <p class="TextoAtividade">
-                                        <?= htmlspecialchars($atividade['modificacao']) ?> em
-                                        <strong><?= htmlspecialchars($atividade['titulo_requisito']) ?></strong>
+                                        <?= htmlspecialchars($atividade['modificacao']) ?>
+                                        <?php if (!empty($atividade['titulo_requisito'])): ?>
+                                            em <strong><?= htmlspecialchars($atividade['titulo_requisito']) ?></strong>
+                                        <?php endif; ?>
                                         no projeto <em><?= htmlspecialchars($atividade['nome_projeto']) ?></em>
                                     </p>
                                 </div>
@@ -308,7 +342,7 @@ if (!$isCliente && $_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php
                         endforeach;
                     } else {
-                        echo "<p style='color: #666; font-size: 0.9rem;'>Nenhuma atividade recente encontrada nos projetos da sua empresa.</p>";
+                        echo "<p style='color: #666; font-size: 0.9rem;'>Nenhuma atividade recente encontrada nos seus projetos.</p>";
                     }
                 } catch (PDOException $e) {
                     echo "<p style='color: red;'>Erro ao carregar o feed de atividades: " . htmlspecialchars($e->getMessage()) . "</p>";

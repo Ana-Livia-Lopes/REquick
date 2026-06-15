@@ -45,7 +45,6 @@ $isAdmin = (strtolower($tipoUsuario) === 'administrador');
                     <p><?= htmlspecialchars($tipoUsuario) ?></p>
                     <span><i class="fa-solid fa-envelope"></i> <?= htmlspecialchars($emailUsuario) ?></span>
                 </div>
-                <!-- botão abre o modal em vez de navegar -->
                 <button class="BotaoCadastrar" id="btnAbrirModal">Editar perfil</button>
             </div>
 
@@ -81,7 +80,6 @@ $isAdmin = (strtolower($tipoUsuario) === 'administrador');
         </section>
     </div>
 
-    <!-- ============ MODAL EDITAR PERFIL ============ -->
     <div class="ModalOverlay" id="modalEditarPerfil" role="dialog" aria-modal="true" aria-labelledby="tituloModal">
         <div class="ModalBox">
             <button class="ModalFechar" id="btnFecharModal" aria-label="Fechar modal">&times;</button>
@@ -110,11 +108,9 @@ $isAdmin = (strtolower($tipoUsuario) === 'administrador');
             </form>
         </div>
     </div>
-    <!-- ============================================= -->
 
     <script>
     (function () {
-        /* -------- Modal editar perfil -------- */
         const overlay       = document.getElementById('modalEditarPerfil');
         const btnAbrir      = document.getElementById('btnAbrirModal');
         const btnFechar     = document.getElementById('btnFecharModal');
@@ -155,7 +151,6 @@ $isAdmin = (strtolower($tipoUsuario) === 'administrador');
             });
         }
 
-        /* submissão do formulário de perfil */
         if (formModal) {
             formModal.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -168,14 +163,13 @@ $isAdmin = (strtolower($tipoUsuario) === 'administrador');
                         feedbackModal.textContent = res.mensagem;
 
                         if (res.sucesso) {
-                            /* atualiza os dados exibidos na página */
                             const novoNome  = dados.get('nome');
                             const novoEmail = dados.get('email');
                             document.getElementById('exibirNome').textContent  = novoNome;
                             document.getElementById('exibirEmail').textContent = novoEmail;
 
                             if (res.emailAlterado) {
-                                /* logout por alteração de e-mail */
+
                                 setTimeout(function () { window.location.href = 'logout.php'; }, 1500);
                             } else {
                                 setTimeout(fecharModal, 1500);
@@ -189,7 +183,6 @@ $isAdmin = (strtolower($tipoUsuario) === 'administrador');
             });
         }
 
-        /* -------- Formulário de segurança (apenas admin) -------- */
         const formSenha     = document.getElementById('formSenha');
         const feedbackSenha = document.getElementById('feedbackSenha');
 

@@ -9,7 +9,6 @@ class Conexao {
 
     public static function getConn(): PDO {
         if (!isset(self::$instance)) {
-            // Lê as credenciais direto aqui — sem depender de require_once externo
             self::$instance = new PDO(
                 'mysql:host=localhost;dbname=bd_requick;charset=utf8mb4',
                 'root',
@@ -25,8 +24,6 @@ class Conexao {
     }
 }
 
-// ---------------------------------------------------------------------------
-
 class Projeto {
     private $id, $nome, $descricao, $idEmpresa, $dataCriacao;
 
@@ -41,8 +38,6 @@ class Projeto {
     public function setDescricao($d)              { $this->descricao = $d; }
 }
 
-// ---------------------------------------------------------------------------
-
 class EmpresaDao {
 
     public function read(): array {
@@ -52,8 +47,6 @@ class EmpresaDao {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-
-// ---------------------------------------------------------------------------
 
 class ProjetoDao {
 
@@ -176,7 +169,6 @@ class ProjetoDao {
 
     public function read_projetos_por_perfil(string $tipo_usuario, ?int $id_empresa, int $id_usuario = 0): array
     {
-        // Administrador e Desenvolvedor veem TODOS os projetos
         if (in_array($tipo_usuario, ['Administrador', 'Desenvolvedor'])) {
             $stmt = Conexao::getConn()->prepare("
                 SELECT
@@ -198,7 +190,7 @@ class ProjetoDao {
             ");
             $stmt->execute();
         } else {
-            // Clientes veem os projetos da empresa DELES **OU** projetos onde foram CONVIDADOS
+
             $stmt = Conexao::getConn()->prepare("
                 SELECT
                     p.id,

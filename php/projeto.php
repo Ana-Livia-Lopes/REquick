@@ -9,7 +9,6 @@ if ($idProjeto <= 0) {
     exit;
 }
 
-// Registro de acesso ao projeto
 $stmtLog = $pdo->prepare("
     INSERT INTO tb_log_acesso_projeto (id_usuario, id_projeto, data_acesso)
     VALUES (:id_usuario, :id_projeto, NOW())
@@ -50,23 +49,22 @@ $imgDao = new \php\ImagensDao($pdo);
 $requisitos = $reqDao->listarPorProjeto($idProjeto);
 $imagens    = $imgDao->listarPorProjeto($idProjeto);
 
-// 1. Busca usuários para o Select único de Convites
 $stmtUsuarios = $pdo->query("SELECT id, nome, email FROM tb_usuarios ORDER BY nome ASC");
 $todosUsuarios = $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
 
-// 2. Busca o Feed de Atividades baseado na SUA tabela 'tb_historico'
 $stmtFeed = $pdo->prepare("
-    SELECT h.data AS data_hora, h.modificacao AS acao_realizada, u.nome AS nome_autor 
+    SELECT h.data AS data_hora, h.modificacao AS acao_realizada, u.nome AS nome_autor
     FROM tb_historico h
-    JOIN tb_requisitos r ON h.id_requisito = r.id
-    JOIN tb_usuarios u ON h.autor = u.id
-    WHERE r.id_projeto = ?
+    LEFT JOIN tb_usuarios u ON h.autor = u.id
+    WHERE h.id_projeto = ?
+       OR h.id_requisito IN (
+           SELECT id FROM tb_requisitos WHERE id_projeto = ?
+       )
     ORDER BY h.data DESC
 ");
-$stmtFeed->execute([$idProjeto]);
+$stmtFeed->execute([$idProjeto, $idProjeto]);
 $feedAtividades = $stmtFeed->fetchAll(PDO::FETCH_ASSOC);
 
-// Busca comentários do projeto
 $stmtComentarios = $pdo->prepare("
     SELECT c.*, u.nome AS nome_autor 
     FROM tb_comentarios c 
@@ -686,7 +684,6 @@ function badgeStatus(int $statusReq): string {
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // Inicialização do Tom Select no modal de convites para permitir digitação autocomplete
     if(document.getElementById('select-usuarios')){
         new TomSelect("#select-usuarios",{
             create: false,
@@ -698,7 +695,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// Filtro em tempo real na tabela de requisitos
 document.getElementById('campoBusca').addEventListener('input', function () {
     const termo = this.value.toLowerCase();
     document.querySelectorAll('.tabela-linha').forEach(linha => {
@@ -707,7 +703,6 @@ document.getElementById('campoBusca').addEventListener('input', function () {
     });
 });
 
-// Acionamento automático do formulário oculto para inversão do status em 1 clique
 function alternarStatus(idReq, statusAtual) {
     document.getElementById('toggleIdReq').value = idReq;
     document.getElementById('toggleStatusAtual').value = statusAtual;
@@ -752,7 +747,6 @@ function trocarAba(btn) {
     document.getElementById(btn.dataset.aba).classList.add('ativo');
 }
 
-/* Modal upload de imagens */
 const modalImg    = document.getElementById('modalUploadImagem');
 const btnAbrirImg = document.getElementById('btnAbrirModalImagem');
 const btnFecharImg= document.getElementById('btnFecharModalImagem');
@@ -767,7 +761,6 @@ function fecharModalImg() {
     if (modalImg) modalImg.classList.remove('aberto');
 }
 
-/* Upload zona de arrastar arquivo e preview */
 const zona      = document.getElementById('zonaUpload');
 const inputFile = document.getElementById('inputImagens');
 const preview   = document.getElementById('gradePreview');

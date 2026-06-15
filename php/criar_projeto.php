@@ -4,7 +4,6 @@ require_once 'projeto_acoes.php';
 
 header('Content-Type: application/json');
 
-// Apenas Administrador e Desenvolvedor podem criar projetos
 $tipo_usuario = $_SESSION['usuario_tipo'] ?? 'Cliente';
 if (!in_array($tipo_usuario, ['Administrador', 'Desenvolvedor'])) {
     http_response_code(403);
@@ -23,7 +22,6 @@ if (empty($nome) || $id_empresa <= 0) {
     exit;
 }
 
-// Data de criação: previsão informada ou hoje
 $data_criacao = !empty($previsao) ? $previsao : date('Y-m-d');
 
 try {

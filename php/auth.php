@@ -2,7 +2,7 @@
 session_set_cookie_params([
     'lifetime' => 0,
     'path'     => '/',
-    'secure'   => false,    // mude para true em produção com HTTPS
+    'secure'   => false,  
     'httponly' => true,
     'samesite' => 'Strict',
 ]);

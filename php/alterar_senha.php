@@ -36,7 +36,6 @@ if (strlen($novaSenha) < 6) {
     exit;
 }
 
-/* busca hash atual */
 $stmt = $pdo->prepare("SELECT senha FROM tb_usuarios WHERE id = :id");
 $stmt->execute([':id' => $idUsuario]);
 $row = $stmt->fetch();
@@ -48,7 +47,6 @@ if (!$row) {
 
 $hashAtual = $row['senha'];
 
-/* suporta bcrypt (password_hash) e sha256 legado */
 $senhaCorreta = password_verify($senhaAtual, $hashAtual)
              || hash('sha256', $senhaAtual) === $hashAtual;
 

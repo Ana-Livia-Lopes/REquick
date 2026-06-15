@@ -30,7 +30,6 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-/* verifica se o e-mail já existe para outro usuário */
 $stmtCheck = $pdo->prepare("SELECT id FROM tb_usuarios WHERE email = :email AND id != :id");
 $stmtCheck->execute([':email' => $email, ':id' => $idUsuario]);
 
