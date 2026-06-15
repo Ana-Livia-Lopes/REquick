@@ -110,16 +110,6 @@ if (!empty($_SESSION['usuario_id'])) {
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
-            <div class="divider">
-                <span>ou continue com</span>
-            </div>
-
-            <div class="social-login">
-                <a href="./php/google-login.php" class="social-btn">
-                    <img src="https://www.google.com/favicon.ico" alt="">
-                    Google
-                </a>
-            </div>
         </div>
     </div>
 </body>
