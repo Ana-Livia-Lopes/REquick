@@ -101,6 +101,7 @@ function badgeStatus(int $statusReq): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Requick – <?= htmlspecialchars($projeto['nome_projeto']) ?></title>
     <link rel="stylesheet" href="../css/projeto.css" />
+    <link rel="icon" type="image/x-icon" href="../img/icone-REquick.ico">
     <link rel="stylesheet" href="../css/imagens.css" />
     <link rel="stylesheet" href="../css/comentarios.css" /> 
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />

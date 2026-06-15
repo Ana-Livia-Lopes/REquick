@@ -19,6 +19,7 @@ $projetos = $projetoDao->read_projetos_por_perfil($tipo_usuario, (int)$id_empres
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="../img/icone-REquick.ico">
   <title>Requick - Projetos</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/projetos.css" />
