@@ -131,7 +131,7 @@ function badgeStatus(int $statusReq): string {
             </a>
             <div class="AcoesCabecalho">
                 <a href="novo_escopo.php?id=<?= $idProjeto ?>" class="btn-header btn-dark">
-                    Visualizar escopo inicial <i class="fa-solid fa-file-lines"></i>
+                    Visualizar contexto do projeto <i class="fa-solid fa-file-lines"></i>
                 </a>
                 
                 <?php if ($podeConvidar): ?>

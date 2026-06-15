@@ -1,22 +1,5 @@
 const form = document.getElementById("loginForm");
 const email = document.getElementById("email");
-const password = document.getElementById("password");
-const togglePassword = document.getElementById("togglePassword");
-
-togglePassword.addEventListener("click", () => {
-
-    const type =
-        password.getAttribute("type") === "password"
-            ? "text"
-            : "password";
-
-    password.setAttribute("type", type);
-
-    togglePassword.innerHTML =
-        type === "password"
-            ? '<i class="fa-regular fa-eye"></i>'
-            : '<i class="fa-regular fa-eye-slash"></i>';
-});
 
 form.addEventListener("submit", function(e){
 

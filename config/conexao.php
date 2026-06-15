@@ -1,7 +1,7 @@
 <?php
-$host = 'mysql';
-$usuario = 'app';
-$senha = 'app123';
+$host = 'localhost';
+$usuario = 'root';
+$senha = '';
 $banco = 'bd_requick';
 $port    = 3306;
 

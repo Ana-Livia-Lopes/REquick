@@ -19,8 +19,9 @@
   },
   "homepage": "https://github.com/Ana-Livia-Lopes/REquick#readme",
   "dependencies": {
-    "@hocuspocus/server": "^4.0.0",
+    "@hocuspocus/server": "^4.2.0",
     "@tiptap/extension-collaboration": "^3.22.5",
-    "yjs": "^13.6.30"
+    "mysql2": "^3.22.5",
+    "yjs": "^13.6.31"
   }
 }

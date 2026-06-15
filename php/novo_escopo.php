@@ -27,7 +27,7 @@ require_once 'auth.php'
                 </a>
             </div>
             <div class="div-titulo-subtitulo-escopo">
-                <h1 class="titulo-escopo">Escopo Inicial</h1>
+                <h1 class="titulo-escopo">Contexto do projeto</h1>
                 <h3 class="subtitulo-escopo">Centralize aqui as percepções e necessidades coletadas durante as entrevistas com o cliente. Este registro servirá como base estratégica para a estruturação de requisitos e consultas futuras durante todo o ciclo de vida do projeto.</h3>
             </div>
             <div id="container-texto">

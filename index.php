@@ -65,7 +65,7 @@ if (!empty($_SESSION['usuario_id'])) {
     <div class="login-wrapper">
         <div class="login-card">
             <div class="logo">
-                <img src="img/logo-requick.png" alt="Requick" class="ImagemLogoLogin">
+                <img src="img/logo-requick-azul.png" alt="Requick" class="ImagemLogoLogin">
             </div>
             <h2>Entrar na sua conta</h2>
             <p class="subtitle">
@@ -102,8 +102,6 @@ if (!empty($_SESSION['usuario_id'])) {
                     <div class="input-wrapper">
                         <i class="fa-solid fa-lock"></i>
                         <input type="password" id="IdSenha" name="senha" placeholder="Digite a sua senha" required>
-                        <button type="button" class="toggle-password" id="togglePassword">
-                            <i class="fa-regular fa-eye"></i>
                         </button>
                     </div>
                 </div>

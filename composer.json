@@ -1,17 +1,17 @@
 {
-    "name": "aluno/r-equick",
+    "name": "victo/r-equick",
     "autoload": {
         "psr-4": {
-            "Aluno\\REquick\\": "src/"
+            "Victo\\REquick\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "victorkoba",
+            "name": "Victor Koba",
             "email": "victorkoba08@gmail.com"
         }
     ],
     "require": {
-        "league/oauth2-google": "*"
+        "league/oauth2-google": "^5.0"
     }
 }
