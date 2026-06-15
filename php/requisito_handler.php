@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     $stmt = $pdo->prepare("UPDATE tb_requisitos SET status_req = ? WHERE id = ?");
     $stmt->execute([$novoStatus, $idReq]);
 
-    $descricaoAcao = $novoStatus === 1 ? "Validou o requisito" : "Marcou o requisito como 'Em andamento'";
+    $descricaoAcao = $novoStatus === 1 ? "Validou o requisito" : "Marcou o requisito como 'Em análise'";
 
     $stmtLog = $pdo->prepare("INSERT INTO tb_historico (modificacao, autor, id_requisito, id_projeto) VALUES (?, ?, ?, ?)");
     $stmtLog->execute([$descricaoAcao, $_SESSION['usuario_id'], $idReq, $idProjeto]);
